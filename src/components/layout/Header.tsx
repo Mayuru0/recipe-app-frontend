@@ -20,6 +20,7 @@ import { useFavorites } from "@/hooks/use-favorites"
 import { SerachBar } from "../ui/SerachBar"
 
 
+
 const Header = () => {
 
 const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -43,8 +44,8 @@ const handleLogout = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/categories" className="text-white hover:text-green-400 transition-colors">
+          <nav className="hidden md:flex  items-center lg:space-x-6 md:space-x-8">
+            <Link href="/categories" className="text-white hover:text-green-400 transition-colors ">
               Categories
             </Link>
             {isAuthenticated && (
@@ -153,7 +154,7 @@ const handleLogout = () => {
             <nav className="flex flex-col space-y-2">
               <Link
                 href="/categories"
-                className="text-foreground hover:text-primary transition-colors py-2"
+                className="text-white hover:text-primary transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Categories
@@ -161,7 +162,7 @@ const handleLogout = () => {
               {isAuthenticated && (
                 <Link
                   href="/favorites"
-                  className="text-foreground hover:text-primary transition-colors py-2 flex items-center gap-2"
+                  className="text-white hover:text-primary transition-colors py-2 flex items-center gap-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   <Heart className="h-4 w-4" />
@@ -200,9 +201,9 @@ const handleLogout = () => {
                 </>
               ) : (
                 <>
-                  <Button variant="ghost" size="sm" asChild>
+                  <Button variant="ghost" size="sm" asChild className="text-white">
                     <Link href="/auth/login" onClick={() => setIsMenuOpen(false)}>
-                      <User className="h-4 w-4 mr-2" />
+                      <User className="h-4 w-4 mr-2 text-white" />
                       Sign In
                     </Link>
                   </Button>
