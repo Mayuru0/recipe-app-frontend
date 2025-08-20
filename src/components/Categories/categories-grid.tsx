@@ -1,55 +1,61 @@
-import { CategoryCard } from "./CategorieCard"
+"use client";
+
+import { useGetCategoriesQuery } from "@/Redux/features/recipesApiSlice";
+import { CategoryCard } from "./CategorieCard";
+import { RecipeCategory } from "@/type/Recipes";
 
 
-const categories = [
-  {
-    id: "italian",
-    name: "Italian",
-    description: "Classic pasta dishes, authentic pizzas, and traditional Italian comfort food",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    recipeCount: 45,
-    color: "#059669",
-  },
-  {
-    id: "asian",
-    name: "Asian",
-    description: "Flavorful stir-fries, aromatic curries, and fresh noodle dishes from across Asia",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    recipeCount: 38,
-    color: "#10b981",
-  },
-  {
-    id: "desserts",
-    name: "Desserts",
-    description: "Sweet treats, decadent cakes, and delightful pastries for every occasion",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    recipeCount: 52,
-    color: "#059669",
-  },
-  {
-    id: "healthy",
-    name: "Healthy",
-    description: "Nutritious salads, protein-packed bowls, and wholesome meals for wellness",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    recipeCount: 41,
-    color: "#10b981",
-  },
-  {
-    id: "quick-meals",
-    name: "Quick Meals",
-    description: "Fast and easy recipes ready in 30 minutes or less for busy weeknights",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    recipeCount: 29,
-    color: "#059669",
-  },
-]
+// Loading skeleton component for category cards
+function CategoryCardSkeleton() {
+  return (
+    <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg animate-pulse">
+      <div className="w-full h-48 bg-gray-700"></div>
+
+      <div className="p-4">
+        <div className="h-6 bg-gray-700 rounded mb-2"></div>
+
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-700 rounded w-full"></div>
+          <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function CategoriesGrid() {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {categories.map((category) => (
-        <CategoryCard key={category.id} {...category} />
+  const { data: categories = [], isLoading, isError } = useGetCategoriesQuery();
+
+  
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }, (_, index) => (
+          <CategoryCardSkeleton key={index} />
+        ))}
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <p className="text-center text-red-500 text-lg font-semibold">
+        Failed to load categories.
+      </p>
+    );
+  }
+
+ return (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {(categories as RecipeCategory[])
+      .filter((_, index) => index !== 4) 
+      .slice(0, 6) 
+      .map((category) => (
+        <CategoryCard key={category.idCategory} category={category} />
       ))}
-    </div>
-  )
+  </div>
+);
+
+
 }
