@@ -39,22 +39,23 @@ const LoginPage = () => {
     }
   }
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-serif text-center">Welcome Back</CardTitle>
-        <CardDescription className="text-center">Sign in to access your favorite recipes</CardDescription>
+     <div className="absolute flex flex-col items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+        <div className="bg-white/15 backdrop-blur-md p-8 rounded-2xl shadow-xl w-80  sm:w-96">
+      <CardHeader className="space-y-1 mb-10">
+        <CardTitle className="text-2xl font-serif text-center text-white">Welcome Back</CardTitle>
+        <CardDescription className="text-center text-white">Sign in to access your favorite recipes</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 ">
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          <div className="space-y-2">
+          <div className="space-y-2 text-white ">
             <Label htmlFor="email">Email</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <div className="relative text-white">
+              <Mail className="absolute left-3 top-3 h-4 w-4 " />
               <Input
                 id="email"
                 type="email"
@@ -64,13 +65,14 @@ const LoginPage = () => {
                 className="pl-10"
                 required
                 disabled={isLoading}
+                
               />
             </div>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 text-white">
             <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <div className="relative text-white">
+              <Lock className="absolute left-3 top-3 h-4 w-4 " />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
@@ -90,14 +92,14 @@ const LoginPage = () => {
                 disabled={isLoading}
               >
                 {showPassword ? (
-                  <EyeOff className="h-4 w-4 text-muted-foreground" />
+                  <EyeOff className="h-4 w-4 text-white " />
                 ) : (
-                  <Eye className="h-4 w-4 text-muted-foreground" />
+                  <Eye className="h-4 w-4 text-white" />
                 )}
               </Button>
             </div>
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -109,16 +111,17 @@ const LoginPage = () => {
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          <span className="text-muted-foreground">Don't have an account? </span>
+          <span className="text-gray-200">Don't have an account? </span>
           <Button variant="link" className="p-0 h-auto font-normal" asChild>
             <a href="/auth/signup">Sign up</a>
           </Button>
         </div>
-        <div className="mt-2 text-center text-xs text-muted-foreground">
+        {/* <div className="mt-2 text-center text-xs text-gray-100">
           <p>Demo: Use any email and password to sign in</p>
-        </div>
+        </div> */}
       </CardContent>
-    </Card>
+    </div>
+    </div>
   )
 }
 

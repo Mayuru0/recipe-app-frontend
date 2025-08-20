@@ -17,6 +17,7 @@ import {
 import { Search, Heart, User, Menu, X, LogOut, Settings } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useFavorites } from "@/hooks/use-favorites"
+import { SerachBar } from "../ui/SerachBar"
 
 
 const Header = () => {
@@ -30,7 +31,7 @@ const handleLogout = () => {
     setIsMenuOpen(false)
   }
   return (
-     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-transparent backdrop-blur-sm">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -38,18 +39,18 @@ const handleLogout = () => {
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">R</span>
             </div>
-            <span className="font-serif text-xl font-semibold">RecipeApp</span>
+            <span className="font-serif text-xl text-white font-semibold">RecipeApp</span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/categories" className="text-foreground hover:text-primary transition-colors">
+            <Link href="/categories" className="text-white hover:text-green-400 transition-colors">
               Categories
             </Link>
             {isAuthenticated && (
               <Link
                 href="/favorites"
-                className="text-foreground hover:text-primary transition-colors flex items-center gap-1 relative"
+                className="text-white hover:text-green-400 transition-colors flex items-center gap-1 relative"
               >
                 <Heart className="h-4 w-4" />
                 Favorites
@@ -65,13 +66,13 @@ const handleLogout = () => {
           {/* Search Bar */}
           <div className="hidden md:flex items-center flex-1 max-w-md mx-6">
             <div className="relative w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white" />
+              <SerachBar
                 type="search"
                 placeholder="Search recipes..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4"
+                className="pl-10 pr-4 text-white"
               />
             </div>
           </div>
@@ -117,7 +118,7 @@ const handleLogout = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild>
+                <Button variant="ghost" size="sm" asChild className="text-white">
                   <Link href="/auth/login">
                     <User className="h-4 w-4 mr-2" />
                     Sign In
