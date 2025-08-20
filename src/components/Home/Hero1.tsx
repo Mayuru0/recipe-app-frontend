@@ -53,8 +53,8 @@ const Hero1 = () => {
               </Button>
             ) : (
               <Button variant="outline" size="lg" asChild>
-                <Link href="/auth/login">Login</Link>
-              </Button>
+              <Link href="/auth/signup">Join Free Today</Link>
+            </Button>
             )}
           </div>
         </div>

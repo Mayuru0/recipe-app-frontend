@@ -122,19 +122,19 @@ const Header = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">
+                    <Link href="/profile" className="cursor-pointer hover:bg-gray-300">
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Profile</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/favorites">
+                    <Link href="/favorites" className="cursor-pointer hover:bg-gray-300"> 
                       <Heart className="mr-2 h-4 w-4" />
                       <span>My Favorites</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer hover:bg-gray-300">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
