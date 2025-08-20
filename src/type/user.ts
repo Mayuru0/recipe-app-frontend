@@ -36,5 +36,12 @@ export interface LoginResponse {
   user?: User;
 }
 
-export interface RegisterCredentials
-  extends Omit<User, "_id" | "createdAt" | "updatedAt"> {}
+// export interface RegisterCredentials
+//   extends Omit<User, "_id" | "createdAt" | "updatedAt"> {}
+
+
+export interface RegisterCredentials {
+  name: string
+  email: string
+  password: string
+}
