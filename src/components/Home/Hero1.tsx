@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import Login from "../../../public/assets/1.jpg";
@@ -5,7 +7,10 @@ import { Badge } from "../ui/badge";
 import { ChefHat } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { selectuser } from "@/Redux/features/authSlice";
 const Hero1 = () => {
+    const user = useSelector(selectuser);
   return (
     <div className="min-h-screen w-full relative overflow-hidden flex flex-col justify-center items-center ">
       {/* Background image - full screen */}
@@ -18,7 +23,7 @@ const Hero1 = () => {
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
       </div>
 
       {/* Hero Section */}
@@ -26,7 +31,7 @@ const Hero1 = () => {
         <div className="container mx-auto text-center">
           <Badge variant="secondary" className="mb-4">
             <ChefHat className="h-3 w-3 mr-1" />
-            Discover Amazing Recipes
+            Discover Amazing Recipes 
           </Badge>
           <h1 className="font-serif text-4xl md:text-6xl font-bold text-white  mb-6">
             Your Culinary Journey
@@ -42,9 +47,15 @@ const Hero1 = () => {
             <Button size="lg" asChild>
               <Link href="/categories">Browse Categories</Link>
             </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/auth/signup">Join Free Today</Link>
-            </Button>
+           {user ? (
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/recipes">View Recipes</Link>
+              </Button>
+            ) : (
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/auth/login">Login</Link>
+              </Button>
+            )}
           </div>
         </div>
       </section>

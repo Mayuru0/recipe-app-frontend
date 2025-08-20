@@ -1,8 +1,13 @@
+"use client"
+
 import React from 'react'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import { useSelector } from 'react-redux';
+import { selectuser } from '@/Redux/features/authSlice';
 
 const ButtomHero = () => {
+  const user = useSelector(selectuser);
   return (
     <div>
       <section className="py-16 px-4 bg-card">
@@ -11,9 +16,15 @@ const ButtomHero = () => {
           <p className="text-lg text-muted-foreground mb-8 max-w-xl mx-auto">
             Join thousands of home cooks who have discovered their new favorite recipes with us
           </p>
-          <Button size="lg" asChild>
-            <Link href="/auth/signup">Get Started Free</Link>
-          </Button>
+          {user ? (
+            <Link href="/categories">
+              <Button>Explore Categories</Button>
+            </Link>
+          ) : (
+            <Link href="/login">
+              <Button>Get Started</Button>
+            </Link>
+          )}
         </div>
       </section>
     </div>

@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Search, Heart, User, Menu, X, LogOut, Settings } from "lucide-react";
-import { FaCircleUser } from "react-icons/fa6";
+
 
 import { useFavorites } from "@/hooks/use-favorites";
 import { SerachBar } from "../ui/SerachBar";
