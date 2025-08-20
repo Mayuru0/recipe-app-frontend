@@ -3,6 +3,7 @@ export interface RecipeCategory {
     strCategory: string
     strCategoryDescription: string
     strCategoryThumb : string
+    length: number
 }
 
 

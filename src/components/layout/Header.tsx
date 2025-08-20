@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,15 +26,28 @@ const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { favoriteCount } = useFavorites();
-
+ const [isScrolled, setIsScrolled] = useState(false);
   const user = useSelector(selectuser);
   const dispatch = useDispatch();
   const handleLogout = () => {
     dispatch(logout());
     setIsMenuOpen(false);
   };
+
+   useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50); // scroll 50px wenuwen
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
-    <header className="w-full fixed top-0 left-0 right-0 bg-transparent backdrop-blur-sm z-50 border-b border-white/10">
+   <header
+      className={`w-full fixed top-0 left-0 right-0 z-50 border-b border-white/10 transition-colors duration-300 ${
+        isScrolled ? "text-white bg-black/50" : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
