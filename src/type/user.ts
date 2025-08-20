@@ -2,20 +2,9 @@
 
 export interface User {
   _id: string;
-     name: string;
-        nic: string;
-        email: string;
-        gender: string;
-        address: string;
-        contactNumber: string;
-        PostalCode: string;
-        profilePic: string;
-        role: string;
-        isLoggedIn: boolean;
-        type: string;
-        status: string;
-        isVerified: boolean;
-        
+  name: string;
+  email: string;
+  role: string;
 }
 
 export interface AuthState {
@@ -26,31 +15,26 @@ export interface AuthState {
   error: string | null;
 }
 
-
-
 export interface LoginCredentials {
-    email: string;
-    password: string;
-  }
+  email: string;
+  password: string;
+}
 
+export interface SigninCredentials {
+  email: string;
+  password: string;
+}
 
-  export interface SigninCredentials {
-    email: string;
-    password: string;
-  }
+export interface LoginResponse {
+  success: boolean;
+  data?: {
+    user: User;
+    token: string;
+  };
+  message?: string;
+  token?: string;
+  user?: User;
+}
 
-
-  export interface LoginResponse {
-    success: boolean;
-    data?: {
-      user: User;
-      token: string;
-    };
-    message?: string;
-    token?: string;
-    user?: User;
-  }
-
-
-  export interface RegisterCredentials
+export interface RegisterCredentials
   extends Omit<User, "_id" | "createdAt" | "updatedAt"> {}

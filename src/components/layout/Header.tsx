@@ -15,20 +15,23 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Search, Heart, User, Menu, X, LogOut, Settings } from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
+
 import { useFavorites } from "@/hooks/use-favorites"
 import { SerachBar } from "../ui/SerachBar"
+import { useDispatch, useSelector } from "react-redux"
+import { logout, selectuser } from "@/Redux/features/authSlice"
 
 
 
 const Header = () => {
-
 const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
    const { favoriteCount } = useFavorites()
-  const { user, logout, isAuthenticated } = useAuth()
+  
+ const user = useSelector(selectuser);
+  const dispatch = useDispatch();
 const handleLogout = () => {
-    logout()
+  dispatch(logout());
     setIsMenuOpen(false)
   }
   return (
@@ -48,7 +51,7 @@ const handleLogout = () => {
             <Link href="/categories" className="text-white hover:text-green-400 transition-colors ">
               Categories
             </Link>
-            {isAuthenticated && (
+            {user && (
               <Link
                 href="/favorites"
                 className="text-white hover:text-green-400 transition-colors flex items-center gap-1 relative"
@@ -80,12 +83,12 @@ const handleLogout = () => {
 
           {/* User Actions */}
           <div className="hidden md:flex items-center space-x-2">
-            {isAuthenticated ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.name} />
+                      <AvatarImage src={ "/placeholder.svg"} alt={user?.name} />
                       <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
                   </Button>
@@ -159,7 +162,7 @@ const handleLogout = () => {
               >
                 Categories
               </Link>
-              {isAuthenticated && (
+              {user && (
                 <Link
                   href="/favorites"
                   className="text-white hover:text-primary transition-colors py-2 flex items-center gap-2"
@@ -176,11 +179,11 @@ const handleLogout = () => {
               )}
             </nav>
             <div className="flex flex-col space-y-2 pt-2 border-t">
-              {isAuthenticated ? (
+              {user ? (
                 <>
                   <div className="flex items-center space-x-2 py-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.name} />
+                      <AvatarImage src={ "/placeholder.svg"} alt={user?.name} />
                       <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">

@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, Mail, Lock, User, Loader2 } from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
+
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -22,7 +22,7 @@ const SignupPage = () => {
     confirmPassword: "",
   })
   const [error, setError] = useState("")
-  const { signup, isLoading } = useAuth()
+  // const { signup, isLoading } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {

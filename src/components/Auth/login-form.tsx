@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,34 +10,53 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, Mail, Lock, Loader2 } from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
-
+import { useLoginMutation } from "@/Redux/features/authApiSlice"
+import { useAppSelector } from "@/Redux/hooks"
+import { selectuser, setCredentials } from "@/Redux/features/authSlice"
+import type { User ,LoginResponse } from "@/type/user"
+import toast from "react-hot-toast"
+import { useDispatch, useSelector } from "react-redux"
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  const { login, isLoading } = useAuth()
+  const dispatch = useDispatch()
+  const [ login, {isLoading} ] = useLoginMutation()
+  const user = useSelector(selectuser)
   const router = useRouter()
   
     const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
 
-    const success = await login(email, password)
-    if (success) {
-      // Check if there's a redirect path stored
-      const redirectPath = localStorage.getItem("recipe-app-redirect")
-      if (redirectPath) {
-        localStorage.removeItem("recipe-app-redirect")
-        router.push(redirectPath)
+    try {
+      const response: LoginResponse = await login({ email, password }).unwrap()
+
+      if (response?.user && response?.token) {
+        dispatch(
+          setCredentials({
+            user: response.user as User,
+            token: response.token as string,
+          })
+        )
+        toast.success("✅ Login successful")
       } else {
-        router.push("/favorites")
+        throw new Error("Invalid response format from server")
       }
-    } else {
-      setError("Invalid email or password. Please try again.")
+    } catch (err) {
+      console.error("Login error details:", err)
+      toast.error("❌ Login failed. Please check your credentials.")
+      setError("Login failed")
     }
   }
+
+
+   useEffect(() => {
+    if (user) {
+      router.push("/")
+    }
+  }, [user, router])
   return (
      <div className="absolute flex flex-col items-center justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
         <div className="bg-white/15 backdrop-blur-md p-8 rounded-2xl shadow-xl w-80  sm:w-96">
