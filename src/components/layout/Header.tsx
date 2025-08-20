@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,27 +13,26 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Search, Heart, User, Menu, X, LogOut, Settings } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { Search, Heart, User, Menu, X, LogOut, Settings } from "lucide-react";
+import { FaCircleUser } from "react-icons/fa6";
 
-import { useFavorites } from "@/hooks/use-favorites"
-import { SerachBar } from "../ui/SerachBar"
-import { useDispatch, useSelector } from "react-redux"
-import { logout, selectuser } from "@/Redux/features/authSlice"
-
-
+import { useFavorites } from "@/hooks/use-favorites";
+import { SerachBar } from "../ui/SerachBar";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, selectuser } from "@/Redux/features/authSlice";
 
 const Header = () => {
-const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-   const { favoriteCount } = useFavorites()
-  
- const user = useSelector(selectuser);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const { favoriteCount } = useFavorites();
+
+  const user = useSelector(selectuser);
   const dispatch = useDispatch();
-const handleLogout = () => {
-  dispatch(logout());
-    setIsMenuOpen(false)
-  }
+  const handleLogout = () => {
+    dispatch(logout());
+    setIsMenuOpen(false);
+  };
   return (
     <header className="w-full fixed top-0 left-0 right-0 bg-transparent backdrop-blur-sm z-50 border-b border-white/10">
       <div className="container mx-auto px-4">
@@ -41,14 +40,21 @@ const handleLogout = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">R</span>
+              <span className="text-primary-foreground font-bold text-lg">
+                R
+              </span>
             </div>
-            <span className="font-serif text-xl text-white font-semibold">RecipeApp</span>
+            <span className="font-serif text-xl text-white font-semibold">
+              RecipeApp
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex  items-center lg:space-x-6 md:space-x-8">
-            <Link href="/categories" className="text-white hover:text-green-400 transition-colors ">
+            <Link
+              href="/categories"
+              className="text-white hover:text-green-400 transition-colors "
+            >
               Categories
             </Link>
             {user && (
@@ -59,7 +65,10 @@ const handleLogout = () => {
                 <Heart className="h-4 w-4" />
                 Favorites
                 {favoriteCount > 0 && (
-                  <Badge variant="secondary" className="ml-1 h-5 min-w-5 text-xs px-1.5">
+                  <Badge
+                    variant="secondary"
+                    className="ml-1 h-5 min-w-5 text-xs px-1.5"
+                  >
                     {favoriteCount}
                   </Badge>
                 )}
@@ -86,18 +95,29 @@ const handleLogout = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={ "/placeholder.svg"} alt={user?.name} />
-                      <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                  <button
+                
+                    className="relative h-8 rounded-full px-2 flex items-center space-x-2 cursor-pointer hover:bg-white/10" 
+                  >
+                    <Avatar className="h-8 w-8 ">
+                      <AvatarImage src={"/placeholder.svg"} alt={user?.name} />
+                      <AvatarFallback>
+                        {user?.name?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
-                  </Button>
+                    <span className="text-sm font-medium text-white">{user?.name}</span>
+                  </button>
                 </DropdownMenuTrigger>
+
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user?.name}</p>
-                      <p className="text-xs leading-none text-muted-foreground">{user?.email}</p>
+                      <p className="text-sm font-medium leading-none">
+                        {user?.name}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user?.email}
+                      </p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -122,7 +142,12 @@ const handleLogout = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild className="text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="text-white"
+                >
                   <Link href="/auth/login">
                     <User className="h-4 w-4 mr-2" />
                     Sign In
@@ -136,8 +161,17 @@ const handleLogout = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </Button>
         </div>
 
@@ -171,7 +205,10 @@ const handleLogout = () => {
                   <Heart className="h-4 w-4" />
                   Favorites
                   {favoriteCount > 0 && (
-                    <Badge variant="secondary" className="h-5 min-w-5 text-xs px-1.5">
+                    <Badge
+                      variant="secondary"
+                      className="h-5 min-w-5 text-xs px-1.5"
+                    >
                       {favoriteCount}
                     </Badge>
                   )}
@@ -183,12 +220,16 @@ const handleLogout = () => {
                 <>
                   <div className="flex items-center space-x-2 py-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={ "/placeholder.svg"} alt={user?.name} />
-                      <AvatarFallback>{user?.name?.charAt(0).toUpperCase()}</AvatarFallback>
+                      <AvatarImage src={"/placeholder.svg"} alt={user?.name} />
+                      <AvatarFallback>
+                        {user?.name?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
                       <span className="text-sm font-medium">{user?.name}</span>
-                      <span className="text-xs text-muted-foreground">{user?.email}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {user?.email}
+                      </span>
                     </div>
                   </div>
                   <Button variant="ghost" size="sm" asChild>
@@ -204,14 +245,25 @@ const handleLogout = () => {
                 </>
               ) : (
                 <>
-                  <Button variant="ghost" size="sm" asChild className="text-white">
-                    <Link href="/auth/login" onClick={() => setIsMenuOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="text-white"
+                  >
+                    <Link
+                      href="/auth/login"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       <User className="h-4 w-4 mr-2 text-white" />
                       Sign In
                     </Link>
                   </Button>
                   <Button size="sm" asChild>
-                    <Link href="/auth/signup" onClick={() => setIsMenuOpen(false)}>
+                    <Link
+                      href="/auth/signup"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
                       Sign Up
                     </Link>
                   </Button>
@@ -222,7 +274,7 @@ const handleLogout = () => {
         )}
       </div>
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
