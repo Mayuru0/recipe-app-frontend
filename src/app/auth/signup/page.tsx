@@ -6,7 +6,7 @@ import Login from "../../../../public/assets/1.jpg";
 
 export default function Page() {
   return (
-    <div className="min-h-screen w-full relative overflow-hidden -mt-[20%] md:-mt-[6.8%] lg:-mt-[6%] xl:-mt-[3.4%]">
+    <div className="min-h-screen w-full relative overflow-hidden ">
       {/* Background image - full screen */}
       <div className="absolute inset-0 w-full h-full ">
         <Image
