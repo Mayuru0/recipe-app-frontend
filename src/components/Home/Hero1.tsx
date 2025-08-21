@@ -76,7 +76,7 @@ const Hero1 = () => {
             </Button>
             {user ? (
               <Button variant="outline" size="lg" asChild>
-                <Link href="/recipes">View Recipes</Link>
+                <Link href="/favorites">View Favorite Recipes</Link>
               </Button>
             ) : (
               <Button variant="outline" size="lg" asChild>
