@@ -9,19 +9,18 @@ import { useGetCategoriesQuery } from "@/Redux/features/recipesApiSlice";
 import { CategoryCard } from "./CategorieCard";
 import { RecipeCategory } from "@/type/Recipes";
 
-
 function CategoryCardSkeleton() {
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100 relative">
       <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-      
+
       <div className="w-full h-48 bg-gradient-to-br from-gray-200 to-gray-300 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-gray-300/50 to-transparent"></div>
       </div>
 
       <div className="p-6">
         <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg mb-3 w-3/4"></div>
-        
+
         <div className="space-y-2 mb-4">
           <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-full"></div>
           <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-5/6"></div>
@@ -42,27 +41,36 @@ export function CategoryPage() {
 
   const { data: categories = [], isLoading, isError } = useGetCategoriesQuery();
 
+
+
+ 
+
   // Filter categories based on search term and selected category
   const filteredCategories = useMemo(() => {
     if (!categories.length) return [];
-    
+
     let filtered = categories as RecipeCategory[];
-    
+
     // Filter by search term
     if (searchTerm.trim()) {
-      filtered = filtered.filter((category) =>
-        category.strCategory.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        category.strCategoryDescription?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (category) =>
+          category.strCategory
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()) ||
+          category.strCategoryDescription
+            ?.toLowerCase()
+            .includes(searchTerm.toLowerCase())
       );
     }
-    
+
     // Filter by selected category (if not "All")
     if (selectedCategory !== "All") {
-      filtered = filtered.filter((category) =>
-        category.strCategory === selectedCategory
+      filtered = filtered.filter(
+        (category) => category.strCategory === selectedCategory
       );
     }
-    
+
     return filtered;
   }, [categories, searchTerm, selectedCategory]);
 
@@ -77,12 +85,15 @@ export function CategoryPage() {
   // Get unique categories for filter pills
   const categoryNames = useMemo(() => {
     if (!categories.length) return [];
-    return ["All", ...(categories as RecipeCategory[]).map(cat => cat.strCategory)];
+    return [
+      "All",
+      ...(categories as RecipeCategory[]).map((cat) => cat.strCategory),
+    ];
   }, [categories]);
 
   // Handler functions
   const handleLoadMore = () => {
-    setDisplayCount(prev => prev + 6);
+    setDisplayCount((prev) => prev + 6);
   };
 
   const handleSearch = () => {
@@ -91,7 +102,7 @@ export function CategoryPage() {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -111,12 +122,10 @@ export function CategoryPage() {
     setDisplayCount(6);
   };
 
-  
-
-
   return (
+    
     <div className="min-h-screen  p-4 md:p-6 lg:p-8">
-      <div className="container mx-auto">
+      <div className="container mx-auto ">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
@@ -133,20 +142,25 @@ export function CategoryPage() {
             Recipe Categories
           </h2>
           <div className="flex flex-wrap gap-3">
-            {categoryNames.map((categoryName) => (
-              <Button
-                key={categoryName}
-                variant={selectedCategory === categoryName ? "default" : "secondary"}
-                onClick={() => handleCategoryChange(categoryName)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
-                  selectedCategory === categoryName
-                    ? "bg-gray-900 text-white hover:bg-gray-800 shadow-md"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {categoryName}
-              </Button>
-            ))}
+            {categoryNames
+              .filter((_, index) => index !== 4)
+              .slice(0, 6)
+              .map((categoryName) => (
+                <Button
+                  key={categoryName}
+                  variant={
+                    selectedCategory === categoryName ? "default" : "secondary"
+                  }
+                  onClick={() => handleCategoryChange(categoryName)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 cursor-pointer ${
+                    selectedCategory === categoryName
+                      ? "bg-gray-900 text-white hover:bg-gray-800 shadow-md"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                  }`}
+                >
+                  {categoryName}
+                </Button>
+              ))}
           </div>
         </div>
 
@@ -209,7 +223,7 @@ export function CategoryPage() {
                 {selectedCategory !== "All" && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-gray-900 text-white rounded-full text-sm">
                     {selectedCategory}
-                    <button 
+                    <button
                       onClick={clearSelectedCategory}
                       className="ml-1 hover:bg-gray-700 rounded-full p-0.5 text-xs"
                     >
@@ -220,7 +234,7 @@ export function CategoryPage() {
                 {searchTerm && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
                     "{searchTerm}"
-                    <button 
+                    <button
                       onClick={clearSearchTerm}
                       className="ml-1 hover:bg-blue-200 rounded-full p-0.5 text-xs"
                     >
@@ -240,23 +254,28 @@ export function CategoryPage() {
               {selectedCategory !== "All" ? selectedCategory : "All"} Categories
               {searchTerm && (
                 <span className="text-gray-500 font-normal">
-                  {" "}matching "{searchTerm}"
+                  {" "}
+                  matching "{searchTerm}"
                 </span>
               )}
             </h3>
             <span className="text-sm text-gray-500">
-              Showing {displayedCategories.length} of {filteredCategories.length} categor{filteredCategories.length === 1 ? 'y' : 'ies'}
+              Showing {displayedCategories.length} of{" "}
+              {filteredCategories.length} categor
+              {filteredCategories.length === 1 ? "y" : "ies"}
             </span>
           </div>
         </div>
 
-     {/* Categories Grid */}
+        {/* Categories Grid */}
         {isLoading ? (
-          <div className={`grid gap-6 ${
-            viewMode === "grid" 
-              ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
-              : "grid-cols-1"
-          }`}>
+          <div
+            className={`grid gap-6 ${
+              viewMode === "grid"
+                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                : "grid-cols-1"
+            }`}
+          >
             {/* Show skeleton cards while loading */}
             {Array.from({ length: displayCount }).map((_, index) => (
               <CategoryCardSkeleton key={index} />
@@ -264,16 +283,21 @@ export function CategoryPage() {
           </div>
         ) : displayedCategories.length > 0 ? (
           <>
-            <div className={`grid gap-6 ${
-              viewMode === "grid" 
-                ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" 
-                : "grid-cols-1"
-            }`}>
-              {displayedCategories.map((category) => (
-                <CategoryCard key={category.idCategory} category={category} />
-              ))}
+            <div
+              className={`grid gap-6 ${
+                viewMode === "grid"
+                  ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                  : "grid-cols-1"
+              }`}
+            >
+              {displayedCategories
+                .filter((_, index) => index !== 4)
+                .slice(0, 6)
+                .map((category) => (
+                  <CategoryCard key={category.idCategory} category={category} />
+                ))}
             </div>
-            
+
             {/* Load More Button */}
             {hasMoreCategories && (
               <div className="text-center mt-12">
@@ -282,7 +306,8 @@ export function CategoryPage() {
                   variant="outline"
                   className="px-8 py-3 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
                 >
-                  Load More Categories ({filteredCategories.length - displayCount} remaining)
+                  Load More Categories (
+                  {filteredCategories.length - displayCount} remaining)
                 </Button>
               </div>
             )}
@@ -296,7 +321,8 @@ export function CategoryPage() {
               No categories found
             </h3>
             <p className="text-gray-600">
-              Try adjusting your search terms or filters to find what you're looking for.
+              Try adjusting your search terms or filters to find what you're
+              looking for.
             </p>
             {(selectedCategory !== "All" || searchTerm) && (
               <div className="mt-4">
