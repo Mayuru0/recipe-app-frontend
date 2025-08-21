@@ -1,30 +1,18 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Heart, Clock, Users, Star, ChefHat } from "lucide-react"
+import { Heart, Clock, Users, Star, ChefHat, ExternalLink, Play, Globe } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-interface Recipe {
-  id: string
-  title: string
-  description: string
-  imageUrl: string
-  cookTime: number
-  servings: number
-  difficulty: "Easy" | "Medium" | "Hard"
-  rating: number
-  category: string
-  ingredients: string[]
-  instructions: string[]
-}
+import { useGetRecipeByIdQuery } from "@/Redux/features/recipesApiSlice"
+import { RecipeDetail } from "@/type/Recipes"
 
 interface RecipeDetailsModalProps {
-  recipe: Recipe | null
+  idMeal: string | null
   isOpen: boolean
   onClose: () => void
   isFavorited?: boolean
@@ -32,45 +20,58 @@ interface RecipeDetailsModalProps {
 }
 
 export function RecipeDetailsModal({
-  recipe,
+  idMeal,
   isOpen,
   onClose,
   isFavorited = false,
   onFavoriteToggle,
 }: RecipeDetailsModalProps) {
+
   const [isLiked, setIsLiked] = useState(isFavorited)
+  
+  const { data, isLoading } = useGetRecipeByIdQuery(idMeal!, { skip: !idMeal })
+  const recipe = data && Array.isArray(data) && data.length > 0 ? data[0] : null
+
+  console.log("recipe", recipe)
 
   const handleFavoriteClick = () => {
     if (!recipe) return
     const newFavoriteState = !isLiked
     setIsLiked(newFavoriteState)
-    onFavoriteToggle?.(recipe.id, newFavoriteState)
+    onFavoriteToggle?.(recipe.idMeal, newFavoriteState)
   }
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case "Easy":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-      case "Medium":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-      case "Hard":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+  // Extract ingredients dynamically
+  const ingredients = useMemo(() => {
+    if (!recipe) return []
+    const result: string[] = []
+    for (let i = 1; i <= 20; i++) {
+      const ingredient = recipe[`strIngredient${i}` as keyof RecipeDetail]?.toString().trim()
+      const measure = recipe[`strMeasure${i}` as keyof RecipeDetail]?.toString().trim()
+      if (ingredient) result.push(measure ? `${measure} ${ingredient}` : ingredient)
     }
-  }
+    return result
+  }, [recipe])
 
-  if (!recipe) return null
+  // Extract tags
+  const tags = useMemo(() => {
+    if (!recipe?.strTags) return []
+    return recipe.strTags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag)
+  }, [recipe])
+
+  if (!recipe) return isLoading ? <div className="flex items-center justify-center h-64">Loading...</div> : null
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] p-0 overflow-hidden">
-        <div className="flex flex-col lg:flex-row h-full">
+     <DialogContent className="w-[95vw] max-w-[1400px] h-[95vh] p-0 overflow-hidden">
+
+
+        <div className="flex flex-col lg:flex-row h-[95vh]">
           {/* Image Section */}
-          <div className="relative lg:w-1/2 h-64 lg:h-auto">
+          <div className="relative lg:w-2/3 h-64 lg:h-full">
             <img
-              src={recipe.imageUrl || "/placeholder.svg?height=400&width=600"}
-              alt={recipe.title}
+              src={recipe.strMealThumb || "/placeholder.svg?height=400&width=600"}
+              alt={recipe.strMeal}
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
@@ -79,68 +80,93 @@ export function RecipeDetailsModal({
             <Button
               variant="ghost"
               size="sm"
-              className="absolute top-4 right-4 h-10 w-10 p-0 bg-white/90 hover:bg-white transition-colors"
+              className="absolute top-4 right-4 h-10 w-10 p-0 bg-white/90 hover:bg-white transition-colors cursor-pointer"
               onClick={handleFavoriteClick}
             >
               <Heart
-                className={cn("h-5 w-5 transition-colors", isLiked ? "fill-red-500 text-red-500" : "text-gray-600")}
+                className={cn("h-5 w-5 transition-colors cursor-pointer", isLiked ? "fill-red-500 text-red-500" : "text-gray-600 ")}
               />
             </Button>
 
             {/* Category Badge */}
-            <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">{recipe.category}</Badge>
+            <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
+              {recipe.strCategory}
+            </Badge>
 
-            {/* Rating */}
-            <div className="absolute bottom-4 left-4 flex items-center gap-1 bg-white/90 rounded-full px-3 py-1.5">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-              <span className="text-sm font-medium text-gray-900">{recipe.rating.toFixed(1)}</span>
-            </div>
+            {/* Area Badge */}
+            <Badge className="absolute top-16 left-4 bg-secondary text-secondary-foreground">
+              <Globe className="h-3 w-3 mr-1" />
+              {recipe.strArea}
+            </Badge>
           </div>
 
           {/* Content Section */}
-          <div className="lg:w-1/2 flex flex-col">
-            <DialogHeader className="p-6 pb-4">
+          <div className="lg:w-1/3 flex flex-col h-full">
+            <DialogHeader className="p-6 pb-4 flex-shrink-0">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <DialogTitle className="font-serif text-2xl font-bold text-foreground mb-2">
-                    {recipe.title}
+                    {recipe.strMeal}
                   </DialogTitle>
-                  <p className="text-muted-foreground leading-relaxed">{recipe.description}</p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                    <ChefHat className="h-4 w-4" />
+                    <span>{recipe.strArea} Cuisine</span>
+                
+                  </div>
+                  
+                  {/* Tags */}
+                  {tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {tags.map((tag: string, index: number) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <Badge variant="outline" className={getDifficultyColor(recipe.difficulty)}>
-                  {recipe.difficulty}
-                </Badge>
               </div>
             </DialogHeader>
 
-            {/* Recipe Stats */}
-            <div className="px-6 pb-4">
-              <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span>{recipe.cookTime} minutes</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  <span>{recipe.servings} servings</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ChefHat className="h-4 w-4" />
-                  <span>{recipe.difficulty}</span>
-                </div>
-              </div>
-            </div>
-
-            <Separator />
+            <Separator className="flex-shrink-0" />
 
             {/* Scrollable Content */}
-            <ScrollArea className="flex-1 px-6">
-              <div className="py-6 space-y-6">
+            <ScrollArea className="flex-1 overflow-hidden">
+              <div className="px-6 py-6 space-y-6">
+                {/* Quick Links */}
+                <div className="flex gap-2">
+                  {recipe.strYoutube && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center gap-1"
+                      onClick={() => window.open(recipe.strYoutube, '_blank')}
+                    >
+                      <Play className="h-3 w-3" />
+                      Watch Video
+                    </Button>
+                  )}
+                  {recipe.strSource && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center gap-1"
+                      onClick={() => window.open(recipe.strSource, '_blank')}
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      Source
+                    </Button>
+                  )}
+                </div>
+
                 {/* Ingredients */}
                 <div>
-                  <h3 className="font-serif text-lg font-semibold text-foreground mb-3">Ingredients</h3>
+                  <h3 className="font-serif text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
+                    <ChefHat className="h-5 w-5" />
+                    Ingredients ({ingredients.length})
+                  </h3>
                   <ul className="space-y-2">
-                    {recipe.ingredients.map((ingredient, index) => (
+                    {ingredients.map((ingredient: string, index: number) => (
                       <li key={index} className="flex items-start gap-3 text-sm">
                         <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
                         <span className="text-foreground capitalize">{ingredient}</span>
@@ -154,27 +180,65 @@ export function RecipeDetailsModal({
                 {/* Instructions */}
                 <div>
                   <h3 className="font-serif text-lg font-semibold text-foreground mb-3">Instructions</h3>
-                  <ol className="space-y-4">
-                    {recipe.instructions.map((instruction, index) => (
-                      <li key={index} className="flex gap-4 text-sm">
-                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
-                          {index + 1}
+                  <div className="prose prose-sm max-w-none">
+                    {recipe.strInstructions.split('\r\n').filter((step: string) => step.trim()).map((step: string, index: number) => (
+                      <div key={index} className="mb-3 p-3 bg-muted/30 rounded-lg">
+                        <div className="flex items-start gap-3">
+                          <span className="bg-primary text-primary-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            {index + 1}
+                          </span>
+                          <p className="text-sm leading-relaxed m-0">{step.trim()}</p>
                         </div>
-                        <span className="text-foreground leading-relaxed">{instruction}</span>
-                      </li>
+                      </div>
                     ))}
-                  </ol>
+                  </div>
+                </div>
+
+                {/* Recipe Metadata */}
+                <div className="bg-muted/20 p-4 rounded-lg">
+                  <h3 className="font-semibold mb-3">Recipe Details</h3>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div className="flex">
+                      <span className="font-medium">Category:</span>
+                      <p className="text-muted-foreground">{recipe.strCategory}</p>
+                    </div>
+                    <div className="flex">
+                      <span className="font-medium">Cuisine:</span>
+                      <p className="text-muted-foreground">{recipe.strArea}</p>
+                    </div>
+                    {recipe.strMealAlternate && (
+                      <div className="col-span-2">
+                        <span className="font-medium">Alternative Name:</span>
+                        <p className="text-muted-foreground">{recipe.strMealAlternate}</p>
+                      </div>
+                    )}
+                    {recipe.dateModified && (
+                      <div className="col-span-2">
+                        <span className="font-medium">Last Modified:</span>
+                        <p className="text-muted-foreground">{new Date(recipe.dateModified).toLocaleDateString()}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </ScrollArea>
 
             {/* Footer Actions */}
-            <div className="p-6 pt-4 border-t">
+            <div className="p-6 pt-4 border-t flex-shrink-0">
               <div className="flex gap-3">
                 <Button variant={isLiked ? "default" : "outline"} onClick={handleFavoriteClick} className="flex-1">
                   <Heart className={cn("h-4 w-4 mr-2", isLiked && "fill-current")} />
                   {isLiked ? "Saved to Favorites" : "Save Recipe"}
                 </Button>
+                {recipe.strYoutube && (
+                  <Button 
+                    variant="secondary"
+                    onClick={() => window.open(recipe.strYoutube, '_blank')}
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    Video
+                  </Button>
+                )}
                 <Button variant="outline" onClick={onClose}>
                   Close
                 </Button>

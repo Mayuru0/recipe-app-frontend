@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { RecipeCard } from "./recipe-card";
+import { RecipeDetailsModal } from "./recipe-details-modal";
 
 interface RecipePageProps {
   recipes: Recipe[];
@@ -37,6 +38,10 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
   const [selectedRecipe, setSelectedRecipe] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [displayCount, setDisplayCount] = useState<number>(6);
+
+
+  const [modalRecipeId, setModalRecipeId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const filteredRecipes = useMemo(() => {
     let filtered = recipes;
@@ -81,6 +86,12 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
     setDisplayCount(6);
   };
 
+
+
+    const handleViewDetails = (id: string) => {
+  setModalRecipeId(id);
+  setIsModalOpen(true);
+};
   return (
     <div className="container mx-auto">
       {/* Category Pills */}
@@ -176,6 +187,7 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
                 id={recipe.idMeal}
                 title={recipe.strMeal}
                 imageUrl={recipe.strMealThumb}
+                onViewDetails={handleViewDetails}
               />
             ))}
           </div>
@@ -202,6 +214,15 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
           </p>
         </div>
       )}
+
+
+        {/* Recipe Details Modal */}
+      <RecipeDetailsModal
+  idMeal={modalRecipeId}
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+/>
+
     </div>
   );
 };

@@ -17,7 +17,7 @@ import RecipePage from "@/components/recipes/RecipePage";
 const Page = () => {
   const { recipes_id } = useParams<{ recipes_id: string }>();
 
-  const { data } = useGetCategoriesQuery();
+  const { data, isLoading, isError } = useGetCategoriesQuery();
   const categories = (data ?? []) as RecipeCategory[];
 
   const { data: recipesData = [] } = useGetRecipesByCategoryQuery(
@@ -27,13 +27,13 @@ const Page = () => {
 
   console.log("Recipes:", recipes);
 
-  // if (isLoading) {
-  //   return <p className="text-center mt-10">Loading...</p>;
-  // }
+  if (isLoading) {
+    return <p className="text-center mt-[20%]">Loading...</p>;
+  }
 
-  // if (isError || !categories.length) {
-  //   return <p className="text-center mt-10">Failed to load categories.</p>;
-  // }
+  if (isError || !categories.length) {
+    return <p className="text-center mt-[20%]">Failed to load categories.</p>;
+  }
 
   console.log("Recipe ID:", recipes_id);
 
