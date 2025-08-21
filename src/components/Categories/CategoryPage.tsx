@@ -39,7 +39,7 @@ export function CategoryPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [displayCount, setDisplayCount] = useState<number>(6);
 
-  const { data: categories = [], isLoading, isError } = useGetCategoriesQuery();
+  const { data: categories = [], isLoading } = useGetCategoriesQuery();
 
 
 

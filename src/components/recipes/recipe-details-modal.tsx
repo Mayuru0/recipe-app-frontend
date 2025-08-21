@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -29,17 +29,27 @@ export function RecipeDetailsModal({
 
   const [isLiked, setIsLiked] = useState(isFavorited)
   
+   useEffect(() => {
+  setIsLiked(isFavorited);
+}, [isFavorited]);
+  
   const { data, isLoading } = useGetRecipeByIdQuery(idMeal!, { skip: !idMeal })
   const recipe = data && Array.isArray(data) && data.length > 0 ? data[0] : null
 
   console.log("recipe", recipe)
 
-  const handleFavoriteClick = () => {
-    if (!recipe) return
-    const newFavoriteState = !isLiked
-    setIsLiked(newFavoriteState)
-    onFavoriteToggle?.(recipe.idMeal, newFavoriteState)
-  }
+
+ 
+ const handleFavoriteClick = (e: React.MouseEvent) => {
+  e.stopPropagation();
+  if (!recipe) return;
+
+  const newFavoriteState = !isLiked;
+  setIsLiked(newFavoriteState);
+  onFavoriteToggle?.(recipe.idMeal, newFavoriteState);
+};
+
+
 
   // Extract ingredients dynamically
   const ingredients = useMemo(() => {
@@ -60,6 +70,7 @@ export function RecipeDetailsModal({
   }, [recipe])
 
   if (!recipe) return isLoading ? <div className="flex items-center justify-center h-64">Loading...</div> : null
+
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

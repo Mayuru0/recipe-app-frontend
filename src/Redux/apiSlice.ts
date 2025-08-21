@@ -18,7 +18,8 @@ export const apiSlice = createApi({
   }),
   tagTypes: [
     "Auth",
-    "Recipes"
+    "Recipes",
+    "Favorites"
     
    
 

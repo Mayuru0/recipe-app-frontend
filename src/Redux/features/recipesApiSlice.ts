@@ -2,7 +2,7 @@ import { Recipe, RecipeCategory, RecipeDetail } from "@/type/Recipes";
 import { apiSlice } from "../apiSlice";
 
 
-export const eventApiSlice = apiSlice.injectEndpoints({
+export const recipeApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     
     // Get all Recipes
@@ -31,4 +31,4 @@ export const {
   useGetRecipesByCategoryQuery
 
   
-} = eventApiSlice;
+} = recipeApiSlice;

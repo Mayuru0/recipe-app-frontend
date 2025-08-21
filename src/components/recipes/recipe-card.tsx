@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Heart } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 
 interface RecipeCardProps {
@@ -19,23 +19,26 @@ export function RecipeCard({
   id,
   title,
   imageUrl,
-  isFavorited = false,
+  isFavorited,
   onFavoriteToggle,
   onViewDetails,
 }: RecipeCardProps) {
   const [isLiked, setIsLiked] = useState(isFavorited)
 
-  const handleFavoriteClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    const newFavoriteState = !isLiked
-    setIsLiked(newFavoriteState)
-    onFavoriteToggle?.(id, newFavoriteState)
-  }
+ const handleFavoriteClick = (e: React.MouseEvent) => {
+  e.stopPropagation()
+  const newFavoriteState = !isLiked
+  setIsLiked(newFavoriteState)
+  onFavoriteToggle?.(id, newFavoriteState)
+}
+
 
   const handleCardClick = () => {
     onViewDetails?.(id)
   }
-
+useEffect(() => {
+  setIsLiked(isFavorited)
+}, [isFavorited])
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer" onClick={handleCardClick}>
       <div className="relative h-48 overflow-hidden">

@@ -6,6 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { RecipeCard } from "./recipe-card";
 import { RecipeDetailsModal } from "./recipe-details-modal";
+import {
+  useAddFavoriteMutation,
+  useGetFavoritesQuery,
+  useRemoveFavoriteMutation,
+} from "@/Redux/features/favoritesApiSlice";
 
 interface RecipePageProps {
   recipes: Recipe[];
@@ -34,14 +39,20 @@ function CategoryCardSkeleton() {
   );
 }
 
-const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) => {
+const RecipePage: React.FC<RecipePageProps> = ({
+  recipes,
+  isLoading = false,
+}) => {
   const [selectedRecipe, setSelectedRecipe] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [displayCount, setDisplayCount] = useState<number>(6);
 
-
   const [modalRecipeId, setModalRecipeId] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data: favorites = [] } = useGetFavoritesQuery();
+  const [addFavorite] = useAddFavoriteMutation();
+  const [removeFavorite] = useRemoveFavoriteMutation();
 
   const filteredRecipes = useMemo(() => {
     let filtered = recipes;
@@ -59,12 +70,15 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
     return filtered;
   }, [recipes, searchTerm, selectedRecipe]);
 
-  const categoryNames = useMemo(() => ["All", ...recipes.map((r) => r.strMeal)], [recipes]);
+  const categoryNames = useMemo(
+    () => ["All", ...recipes.map((r) => r.strMeal)],
+    [recipes]
+  );
 
-  const displayedRecipes = useMemo(() => filteredRecipes.slice(0, displayCount), [
-    filteredRecipes,
-    displayCount,
-  ]);
+  const displayedRecipes = useMemo(
+    () => filteredRecipes.slice(0, displayCount),
+    [filteredRecipes, displayCount]
+  );
 
   const hasMore = displayedRecipes.length < filteredRecipes.length;
 
@@ -86,17 +100,41 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
     setDisplayCount(6);
   };
 
+  const handleViewDetails = (id: string) => {
+    setModalRecipeId(id);
+    setIsModalOpen(true);
+  };
 
-
-    const handleViewDetails = (id: string) => {
-  setModalRecipeId(id);
-  setIsModalOpen(true);
-};
+  // function to toggle favorite
+  const handleFavoriteToggle = async (
+    idMeal: string,
+    newState: boolean,
+    title: string,
+    imageUrl: string
+  ) => {
+    try {
+      if (newState) {
+        // add to favorites
+        await addFavorite({
+          idMeal,
+          strMeal: title,
+          strMealThumb: imageUrl,
+        }).unwrap();
+      } else {
+        // remove from favorites
+        await removeFavorite(idMeal).unwrap();
+      }
+    } catch (error) {
+      console.error("Failed to update favorite:", error);
+    }
+  };
   return (
     <div className="container mx-auto">
       {/* Category Pills */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Recipe Categories</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Recipe Categories
+        </h2>
         <div className="flex flex-wrap gap-3">
           {categoryNames
             .filter((_, index) => index !== 4)
@@ -181,16 +219,33 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
       ) : displayedRecipes.length > 0 ? (
         <>
           <div className="grid grid-cols-3 gap-6 mb-6">
-            {displayedRecipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.idMeal}
-                id={recipe.idMeal}
-                title={recipe.strMeal}
-                imageUrl={recipe.strMealThumb}
-                onViewDetails={handleViewDetails}
-              />
-            ))}
+            {displayedRecipes.map((recipe) => {
+              const isFavorited = favorites.some(
+                (fav) =>
+                  fav.idMeal === recipe.idMeal && fav.status === "favorite"
+              );
+
+              return (
+                <RecipeCard
+                  key={recipe.idMeal}
+                  id={recipe.idMeal}
+                  title={recipe.strMeal}
+                  imageUrl={recipe.strMealThumb}
+                  isFavorited={isFavorited}
+                  onFavoriteToggle={(id, newState) =>
+                    handleFavoriteToggle(
+                      id,
+                      newState,
+                      recipe.strMeal,
+                      recipe.strMealThumb
+                    )
+                  }
+                  onViewDetails={handleViewDetails}
+                />
+              );
+            })}
           </div>
+
           {hasMore && (
             <div className="text-center mt-12">
               <Button
@@ -198,7 +253,8 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
                 variant="outline"
                 className="px-8 py-3 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
               >
-                Load More ({filteredRecipes.length - displayedRecipes.length} remaining)
+                Load More ({filteredRecipes.length - displayedRecipes.length}{" "}
+                remaining)
               </Button>
             </div>
           )}
@@ -208,21 +264,37 @@ const RecipePage: React.FC<RecipePageProps> = ({ recipes, isLoading = false }) =
           <div className="text-gray-400 mb-4">
             <Search className="w-16 h-16 mx-auto mb-4" />
           </div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">No recipes found</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2">
+            No recipes found
+          </h3>
           <p className="text-gray-600">
-            Try adjusting your search terms or filters to find what you're looking for.
+            Try adjusting your search terms or filters to find what you're
+            looking for.
           </p>
         </div>
       )}
 
-
-        {/* Recipe Details Modal */}
+      {/* Recipe Details Modal */}
       <RecipeDetailsModal
-  idMeal={modalRecipeId}
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-/>
+        idMeal={modalRecipeId}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        isFavorited={favorites.some(
+          (fav) => fav.idMeal === modalRecipeId && fav.status === "favorite"
+        )}
+        onFavoriteToggle={(id, newState) => {
+          
+          const recipeItem = displayedRecipes.find((r) => r.idMeal === id);
+          if (!recipeItem) return;
 
+          handleFavoriteToggle(
+            id,
+            newState,
+            recipeItem.strMeal,
+            recipeItem.strMealThumb
+          );
+        }}
+      />
     </div>
   );
 };
