@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Heart, Clock, Users, Star, ChefHat, ExternalLink, Play, Globe } from "lucide-react"
+import { Heart, ChefHat, ExternalLink, Play, Globe } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useGetRecipeByIdQuery } from "@/Redux/features/recipesApiSlice"
 import { RecipeDetail } from "@/type/Recipes"
+import Image from "next/image"
 
 interface RecipeDetailsModalProps {
   idMeal: string | null
@@ -80,7 +81,8 @@ export function RecipeDetailsModal({
         <div className="flex flex-col lg:flex-row h-[95vh]">
           {/* Image Section */}
           <div className="relative lg:w-2/3 h-64 lg:h-full">
-            <img
+            <Image
+              fill
               src={recipe.strMealThumb || "/placeholder.svg?height=400&width=600"}
               alt={recipe.strMeal}
               className="w-full h-full object-cover"
@@ -150,7 +152,7 @@ export function RecipeDetailsModal({
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 cursor-pointer"
                       onClick={() => window.open(recipe.strYoutube, '_blank')}
                     >
                       <Play className="h-3 w-3" />
@@ -161,7 +163,7 @@ export function RecipeDetailsModal({
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="flex items-center gap-1"
+                      className="flex items-center gap-1 cursor-pointer"
                       onClick={() => window.open(recipe.strSource, '_blank')}
                     >
                       <ExternalLink className="h-3 w-3" />
@@ -235,22 +237,24 @@ export function RecipeDetailsModal({
             </ScrollArea>
 
             {/* Footer Actions */}
-            <div className="p-6 pt-4 border-t flex-shrink-0">
-              <div className="flex gap-3">
-                <Button variant={isLiked ? "default" : "outline"} onClick={handleFavoriteClick} className="flex-1">
-                  <Heart className={cn("h-4 w-4 mr-2", isLiked && "fill-current")} />
+            <div className="p-6 pt-4 border-t flex-shrink-0 cursor-pointer">
+              <div className="flex gap-3 cursor-pointer">
+                <Button variant={isLiked ? "default" : "outline"} onClick={handleFavoriteClick} className="flex-1 cursor-pointer">
+                  <Heart className={cn("h-4 w-4 mr-2 cursor-pointer", isLiked && "fill-current")} />
                   {isLiked ? "Saved to Favorites" : "Save Recipe"}
                 </Button>
                 {recipe.strYoutube && (
                   <Button 
                     variant="secondary"
-                    onClick={() => window.open(recipe.strYoutube, '_blank')}
+                    onClick={() => window.open(recipe.strYoutube, '_blank')
+                    }className="cursor-pointer"
+                    
                   >
-                    <Play className="h-4 w-4 mr-2" />
+                    <Play className="h-4 w-4 mr-2 " />
                     Video
                   </Button>
                 )}
-                <Button variant="outline" onClick={onClose}>
+                <Button variant="outline" onClick={onClose} className="cursor-pointer">
                   Close
                 </Button>
               </div>

@@ -184,18 +184,18 @@ export function CategoryPage() {
               {/* Search Button */}
               <Button
                 onClick={handleSearch}
-                className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-md font-medium transition-colors duration-200"
+                className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-md font-medium transition-colors duration-200 cursor-pointer"
               >
                 Search
               </Button>
 
               {/* View Toggle */}
-              <div className="flex gap-2 border rounded-lg p-1 bg-gray-100">
+              <div className="flex gap-2 border rounded-lg p-1 bg-gray-100 ">
                 <Button
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("grid")}
-                  className={viewMode === "grid" ? " shadow-sm" : ""}
+                  className=   {viewMode === "grid" ? " shadow-sm" : ""}
                 >
                   <Grid className="w-4 h-4" />
                 </Button>
@@ -233,7 +233,7 @@ export function CategoryPage() {
                 )}
                 {searchTerm && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                    "{searchTerm}"
+                    &quot;{searchTerm}&quot;
                     <button
                       onClick={clearSearchTerm}
                       className="ml-1 hover:bg-blue-200 rounded-full p-0.5 text-xs"
@@ -255,7 +255,7 @@ export function CategoryPage() {
               {searchTerm && (
                 <span className="text-gray-500 font-normal">
                   {" "}
-                  matching "{searchTerm}"
+                  {`matching "${searchTerm}"`}
                 </span>
               )}
             </h3>
@@ -321,8 +321,7 @@ export function CategoryPage() {
               No categories found
             </h3>
             <p className="text-gray-600">
-              Try adjusting your search terms or filters to find what you're
-              looking for.
+             {"Try adjusting your search terms or filters to find what you're looking for."}
             </p>
             {(selectedCategory !== "All" || searchTerm) && (
               <div className="mt-4">

@@ -173,7 +173,7 @@ const RecipePage: React.FC<RecipePageProps> = ({
             </div>
             <Button
               onClick={handleSearch}
-              className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-md font-medium transition-colors duration-200"
+              className="bg-red-500 hover:bg-red-600 text-white px-8 py-3 rounded-md font-medium transition-colors duration-200 cursor-pointer"
             >
               Search
             </Button>
@@ -197,7 +197,7 @@ const RecipePage: React.FC<RecipePageProps> = ({
           )}
           {searchTerm && (
             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-              "{searchTerm}"
+            &quot;{searchTerm}&quot;
               <button
                 onClick={clearSearchTerm}
                 className="ml-1 hover:bg-blue-200 rounded-full p-0.5 text-xs"
@@ -218,7 +218,7 @@ const RecipePage: React.FC<RecipePageProps> = ({
         </div>
       ) : displayedRecipes.length > 0 ? (
         <>
-          <div className="grid grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6 mb-6">
             {displayedRecipes.map((recipe) => {
               const isFavorited = favorites.some(
                 (fav) =>
@@ -251,7 +251,7 @@ const RecipePage: React.FC<RecipePageProps> = ({
               <Button
                 onClick={handleLoadMore}
                 variant="outline"
-                className="px-8 py-3 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200"
+                className="px-8 py-3 border-gray-300 text-gray-700 hover:bg-gray-500 cursor-pointer hover:border-gray-400 transition-all duration-200"
               >
                 Load More ({filteredRecipes.length - displayedRecipes.length}{" "}
                 remaining)
@@ -268,8 +268,8 @@ const RecipePage: React.FC<RecipePageProps> = ({
             No recipes found
           </h3>
           <p className="text-gray-600">
-            Try adjusting your search terms or filters to find what you're
-            looking for.
+            {"Try adjusting your search terms or filters to find what you're looking for."}
+
           </p>
         </div>
       )}

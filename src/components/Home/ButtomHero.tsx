@@ -18,11 +18,11 @@ const ButtomHero = () => {
           </p>
           {user ? (
             <Link href="/categories">
-              <Button>Explore Categories</Button>
+              <Button className='cursor-pointer'>Explore Categories</Button>
             </Link>
           ) : (
             <Link href="/login">
-              <Button>Get Started</Button>
+              <Button className='cursor-pointer'>Get Started</Button>
             </Link>
           )}
         </div>

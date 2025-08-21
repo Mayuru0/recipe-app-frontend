@@ -1,14 +1,28 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
+
 import { RecipeCategory } from "@/type/Recipes";
 import Image from "next/image";
 import { ChefHat, ArrowRight } from "lucide-react";
+import { useSelector } from "react-redux";
+import { selectuser } from "@/Redux/features/authSlice";
 
+import { useRouter } from "next/navigation";
 export function CategoryCard({ category }: { category: RecipeCategory }) {
+ const user = useSelector(selectuser);
+ const router = useRouter();
+
+const handleClick = () => {
+    if (user) {
+      router.push(`/categories/${category.strCategory}`);
+    } else {
+      router.push("/auth/login"); // redirect to login if not logged in
+    }
+  };
   return (
-    <Link href={`/categories/${category.strCategory}`} className="group block">
+    
+    <div  onClick={handleClick} className="group block cursor-pointer">
       <Card className="overflow-hidden bg-white dark:bg-gray-900/50 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 backdrop-blur-sm group-hover:ring-2 group-hover:ring-primary/20">
         <div className="relative h-56 overflow-hidden">
           {/* Main Image */}
@@ -70,6 +84,6 @@ export function CategoryCard({ category }: { category: RecipeCategory }) {
           </div>
         </CardContent>
       </Card>
-    </Link>
+    </div>
   );
 }

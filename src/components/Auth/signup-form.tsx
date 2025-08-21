@@ -6,11 +6,18 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {  CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Eye, EyeOff, Mail, Lock, User, Loader2 } from "lucide-react"
 import { useRegisterMutation } from "@/Redux/features/authApiSlice"
 import toast from "react-hot-toast"
+
+interface SubmitError {
+  data?: {
+    message?: string;
+  };
+}
+
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -61,11 +68,12 @@ const SignupPage = () => {
         toast.success("Account created successfully")
         router.push("/auth/login")
       }
-    } catch (err: any) {
-      console.error(err)
-      setError(err?.data?.message || "Account creation failed")
-      toast.error(err?.data?.message || "Account creation failed")
-    }
+    } catch (err: unknown) {
+    const error = err as SubmitError;
+    console.error(error);
+    setError(error?.data?.message || "Account creation failed");
+    toast.error(error?.data?.message || "Account creation failed");
+  }
   }
 
   const handleInputChange = (field: string, value: string) => {

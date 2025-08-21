@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Heart } from "lucide-react"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 interface RecipeCardProps {
   id: string
@@ -42,7 +43,9 @@ useEffect(() => {
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer" onClick={handleCardClick}>
       <div className="relative h-48 overflow-hidden">
-        <img
+        <Image
+          width={500}
+          height={500}
           src={imageUrl || "/placeholder.svg?height=200&width=300"}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -52,11 +55,11 @@ useEffect(() => {
         <Button
           variant="ghost"
           size="sm"
-          className="absolute top-3 right-3 h-8 w-8 p-0 bg-white/90 hover:bg-white transition-colors"
+          className="absolute top-3 right-3 h-8 w-8 p-0 bg-white/90 hover:bg-white transition-colors cursor-pointer"
           onClick={handleFavoriteClick}
         >
           <Heart
-            className={cn("h-4 w-4 transition-colors", isLiked ? "fill-red-500 text-red-500" : "text-gray-600")}
+            className={cn("h-4 w-4 transition-colors cursor-pointer", isLiked ? "fill-red-500 text-red-500" : "text-gray-600")}
           />
         </Button>
       </div>

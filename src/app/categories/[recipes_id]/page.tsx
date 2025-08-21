@@ -37,9 +37,9 @@ const Page = () => {
 
   console.log("Recipe ID:", recipes_id);
 
-  const selectedCategory = categories.find(
-    (cat: any) => cat.strCategory.toLowerCase() === recipes_id.toLowerCase() // match case-insensitive
-  );
+ const selectedCategory = categories.find(
+  (cat: RecipeCategory) => cat.strCategory.toLowerCase() === recipes_id.toLowerCase()
+);
 
   if (!selectedCategory) {
     return (
