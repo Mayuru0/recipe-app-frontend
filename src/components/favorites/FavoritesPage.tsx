@@ -17,7 +17,7 @@ const FavoritesPage = () => {
   const [addFavorite] = useAddFavoriteMutation();
   const [removeFavorite] = useRemoveFavoriteMutation();
 
-  // function to toggle favorite
+
   const handleFavoriteToggle = async (
     idMeal: string,
     newState: boolean,

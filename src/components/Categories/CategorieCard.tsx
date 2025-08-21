@@ -17,7 +17,7 @@ const handleClick = () => {
     if (user) {
       router.push(`/categories/${category.strCategory}`);
     } else {
-      router.push("/auth/login"); // redirect to login if not logged in
+      router.push("/auth/login"); 
     }
   };
   return (

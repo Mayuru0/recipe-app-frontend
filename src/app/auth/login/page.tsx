@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Page() {
   return (
   <div className="min-h-screen w-full relative overflow-hidden ">
-      {/* Background image - full screen */}
+     
       <div className="absolute inset-0 w-full h-full ">
         <Image
           src={Login}
@@ -18,7 +18,7 @@ export default function Page() {
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      {/* Login form section - centered overlay */}
+      
       <div className="relative z-10 flex min-h-screen items-center justify-center w-full px-4 py-8">
         <div className="w-full max-w-md">
           <LoginPage />

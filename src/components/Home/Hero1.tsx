@@ -14,7 +14,7 @@ const Hero1 = () => {
   const user = useSelector(selectuser);
   return (
     <div className="min-h-screen w-full relative overflow-hidden flex flex-col justify-center items-center ">
-      {/* Background image - full screen */}
+  
       <div className="absolute inset-0 w-full h-full ">
         <Image
           src={Login}

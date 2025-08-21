@@ -5,7 +5,7 @@ import { CategoryCard } from "./CategorieCard";
 import { RecipeCategory } from "@/type/Recipes";
 
 
-// Loading skeleton component for category cards
+
 function CategoryCardSkeleton() {
   return (
     <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg animate-pulse">
