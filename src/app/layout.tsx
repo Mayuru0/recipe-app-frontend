@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import { Toaster } from "react-hot-toast"
 import Providers from "@/Redux/provider";
+import AOSInit from "@/utils/AOSInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       ><Providers>
+        <AOSInit />
         <Header />
         {children}
         <Toaster position="top-right" reverseOrder={false} />

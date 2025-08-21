@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 
 import { useState, useMemo } from "react";
 import { Search, Grid, List } from "lucide-react";
@@ -40,10 +41,6 @@ export function CategoryPage() {
   const [displayCount, setDisplayCount] = useState<number>(6);
 
   const { data: categories = [], isLoading } = useGetCategoriesQuery();
-
-
-
- 
 
   // Filter categories based on search term and selected category
   const filteredCategories = useMemo(() => {
@@ -123,7 +120,6 @@ export function CategoryPage() {
   };
 
   return (
-    
     <div className="min-h-screen  p-4 md:p-6 lg:p-8">
       <div className="container mx-auto ">
         {/* Header */}
@@ -195,7 +191,7 @@ export function CategoryPage() {
                   variant={viewMode === "grid" ? "default" : "ghost"}
                   size="sm"
                   onClick={() => setViewMode("grid")}
-                  className=   {viewMode === "grid" ? " shadow-sm" : ""}
+                  className={viewMode === "grid" ? " shadow-sm" : ""}
                 >
                   <Grid className="w-4 h-4" />
                 </Button>
@@ -276,9 +272,16 @@ export function CategoryPage() {
                 : "grid-cols-1"
             }`}
           >
-            {/* Show skeleton cards while loading */}
+            {/* Skeleton cards */}
             {Array.from({ length: displayCount }).map((_, index) => (
-              <CategoryCardSkeleton key={index} />
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <CategoryCardSkeleton />
+              </motion.div>
             ))}
           </div>
         ) : displayedCategories.length > 0 ? (
@@ -293,14 +296,28 @@ export function CategoryPage() {
               {displayedCategories
                 .filter((_, index) => index !== 4)
                 .slice(0, 6)
-                .map((category) => (
-                  <CategoryCard key={category.idCategory} category={category} />
+                .map((category, index) => (
+                  <motion.div
+                    key={category.idCategory}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                  >
+                    <CategoryCard category={category} />
+                  </motion.div>
                 ))}
             </div>
 
             {/* Load More Button */}
             {hasMoreCategories && (
-              <div className="text-center mt-12">
+              <motion.div
+                className="text-center mt-12"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
                 <Button
                   onClick={handleLoadMore}
                   variant="outline"
@@ -309,11 +326,17 @@ export function CategoryPage() {
                   Load More Categories (
                   {filteredCategories.length - displayCount} remaining)
                 </Button>
-              </div>
+              </motion.div>
             )}
           </>
         ) : (
-          <div className="text-center py-12">
+          <motion.div
+            className="text-center py-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             <div className="text-gray-400 mb-4">
               <Search className="w-16 h-16 mx-auto mb-4" />
             </div>
@@ -321,7 +344,9 @@ export function CategoryPage() {
               No categories found
             </h3>
             <p className="text-gray-600">
-             {"Try adjusting your search terms or filters to find what you're looking for."}
+              {
+                "Try adjusting your search terms or filters to find what you're looking for."
+              }
             </p>
             {(selectedCategory !== "All" || searchTerm) && (
               <div className="mt-4">
@@ -338,7 +363,7 @@ export function CategoryPage() {
                 </Button>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

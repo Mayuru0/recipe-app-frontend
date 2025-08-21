@@ -1,23 +1,29 @@
-"use client"
+"use client";
 
-import { useState, useMemo, useEffect } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Heart, ChefHat, ExternalLink, Play, Globe } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { useGetRecipeByIdQuery } from "@/Redux/features/recipesApiSlice"
-import { RecipeDetail } from "@/type/Recipes"
-import Image from "next/image"
+import { useState, useMemo, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Heart, ChefHat, ExternalLink, Play, Globe } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useGetRecipeByIdQuery } from "@/Redux/features/recipesApiSlice";
+import { RecipeDetail } from "@/type/Recipes";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface RecipeDetailsModalProps {
-  idMeal: string | null
-  isOpen: boolean
-  onClose: () => void
-  isFavorited?: boolean
-  onFavoriteToggle?: (recipeId: string, isFavorited: boolean) => void
+  idMeal: string | null;
+  isOpen: boolean;
+  onClose: () => void;
+  isFavorited?: boolean;
+  onFavoriteToggle?: (recipeId: string, isFavorited: boolean) => void;
 }
 
 export function RecipeDetailsModal({
@@ -27,63 +33,69 @@ export function RecipeDetailsModal({
   isFavorited = false,
   onFavoriteToggle,
 }: RecipeDetailsModalProps) {
+  const [isLiked, setIsLiked] = useState(isFavorited);
 
-  const [isLiked, setIsLiked] = useState(isFavorited)
-  
-   useEffect(() => {
-  setIsLiked(isFavorited);
-}, [isFavorited]);
-  
-  const { data, isLoading } = useGetRecipeByIdQuery(idMeal!, { skip: !idMeal })
-  const recipe = data && Array.isArray(data) && data.length > 0 ? data[0] : null
+  useEffect(() => {
+    setIsLiked(isFavorited);
+  }, [isFavorited]);
 
-  console.log("recipe", recipe)
+  const { data, isLoading } = useGetRecipeByIdQuery(idMeal!, { skip: !idMeal });
+  const recipe =
+    data && Array.isArray(data) && data.length > 0 ? data[0] : null;
 
+  console.log("recipe", recipe);
 
- 
- const handleFavoriteClick = (e: React.MouseEvent) => {
-  e.stopPropagation();
-  if (!recipe) return;
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!recipe) return;
 
-  const newFavoriteState = !isLiked;
-  setIsLiked(newFavoriteState);
-  onFavoriteToggle?.(recipe.idMeal, newFavoriteState);
-};
-
-
+    const newFavoriteState = !isLiked;
+    setIsLiked(newFavoriteState);
+    onFavoriteToggle?.(recipe.idMeal, newFavoriteState);
+  };
 
   // Extract ingredients dynamically
   const ingredients = useMemo(() => {
-    if (!recipe) return []
-    const result: string[] = []
+    if (!recipe) return [];
+    const result: string[] = [];
     for (let i = 1; i <= 20; i++) {
-      const ingredient = recipe[`strIngredient${i}` as keyof RecipeDetail]?.toString().trim()
-      const measure = recipe[`strMeasure${i}` as keyof RecipeDetail]?.toString().trim()
-      if (ingredient) result.push(measure ? `${measure} ${ingredient}` : ingredient)
+      const ingredient = recipe[`strIngredient${i}` as keyof RecipeDetail]
+        ?.toString()
+        .trim();
+      const measure = recipe[`strMeasure${i}` as keyof RecipeDetail]
+        ?.toString()
+        .trim();
+      if (ingredient)
+        result.push(measure ? `${measure} ${ingredient}` : ingredient);
     }
-    return result
-  }, [recipe])
+    return result;
+  }, [recipe]);
 
   // Extract tags
   const tags = useMemo(() => {
-    if (!recipe?.strTags) return []
-    return recipe.strTags.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag)
-  }, [recipe])
+    if (!recipe?.strTags) return [];
+    return recipe.strTags
+      .split(",")
+      .map((tag: string) => tag.trim())
+      .filter((tag: string) => tag);
+  }, [recipe]);
 
-  if (!recipe) return isLoading ? <div className="flex items-center justify-center h-64">Loading...</div> : null
-
+  if (!recipe)
+    return isLoading ? (
+      <div className="flex items-center justify-center h-64">Loading...</div>
+    ) : null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-     <DialogContent className="w-[95vw] max-w-[1400px] h-[95vh] p-0 overflow-hidden">
-
-
+      <DialogContent className="w-[95vw] max-w-[1400px] h-[95vh] p-0 overflow-hidden">
         <div className="flex flex-col lg:flex-row h-[95vh]">
           {/* Image Section */}
           <div className="relative lg:w-2/3 h-64 lg:h-full">
             <Image
               fill
-              src={recipe.strMealThumb || "/placeholder.svg?height=400&width=600"}
+              src={
+                recipe.strMealThumb || "/placeholder.svg?height=400&width=600"
+              }
               alt={recipe.strMeal}
               className="w-full h-full object-cover"
             />
@@ -97,7 +109,10 @@ export function RecipeDetailsModal({
               onClick={handleFavoriteClick}
             >
               <Heart
-                className={cn("h-5 w-5 transition-colors cursor-pointer", isLiked ? "fill-red-500 text-red-500" : "text-gray-600 ")}
+                className={cn(
+                  "h-5 w-5 transition-colors cursor-pointer",
+                  isLiked ? "fill-red-500 text-red-500" : "text-gray-600 "
+                )}
               />
             </Button>
 
@@ -124,14 +139,17 @@ export function RecipeDetailsModal({
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                     <ChefHat className="h-4 w-4" />
                     <span>{recipe.strArea} Cuisine</span>
-                
                   </div>
-                  
+
                   {/* Tags */}
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
                       {tags.map((tag: string, index: number) => (
-                        <Badge key={index} variant="outline" className="text-xs">
+                        <Badge
+                          key={index}
+                          variant="outline"
+                          className="text-xs"
+                        >
                           {tag}
                         </Badge>
                       ))}
@@ -149,22 +167,22 @@ export function RecipeDetailsModal({
                 {/* Quick Links */}
                 <div className="flex gap-2">
                   {recipe.strYoutube && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="flex items-center gap-1 cursor-pointer"
-                      onClick={() => window.open(recipe.strYoutube, '_blank')}
+                      onClick={() => window.open(recipe.strYoutube, "_blank")}
                     >
                       <Play className="h-3 w-3" />
                       Watch Video
                     </Button>
                   )}
                   {recipe.strSource && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       className="flex items-center gap-1 cursor-pointer"
-                      onClick={() => window.open(recipe.strSource, '_blank')}
+                      onClick={() => window.open(recipe.strSource, "_blank")}
                     >
                       <ExternalLink className="h-3 w-3" />
                       Source
@@ -180,10 +198,18 @@ export function RecipeDetailsModal({
                   </h3>
                   <ul className="space-y-2">
                     {ingredients.map((ingredient: string, index: number) => (
-                      <li key={index} className="flex items-start gap-3 text-sm">
+                      <motion.li
+                        key={index}
+                        className="flex items-start gap-3 text-sm"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                      >
                         <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                        <span className="text-foreground capitalize">{ingredient}</span>
-                      </li>
+                        <span className="text-foreground capitalize">
+                          {ingredient}
+                        </span>
+                      </motion.li>
                     ))}
                   </ul>
                 </div>
@@ -192,18 +218,31 @@ export function RecipeDetailsModal({
 
                 {/* Instructions */}
                 <div>
-                  <h3 className="font-serif text-lg font-semibold text-foreground mb-3">Instructions</h3>
+                  <h3 className="font-serif text-lg font-semibold text-foreground mb-3">
+                    Instructions
+                  </h3>
                   <div className="prose prose-sm max-w-none">
-                    {recipe.strInstructions.split('\r\n').filter((step: string) => step.trim()).map((step: string, index: number) => (
-                      <div key={index} className="mb-3 p-3 bg-muted/30 rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <span className="bg-primary text-primary-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
-                            {index + 1}
-                          </span>
-                          <p className="text-sm leading-relaxed m-0">{step.trim()}</p>
-                        </div>
-                      </div>
-                    ))}
+                    {recipe.strInstructions
+                      .split("\r\n")
+                      .filter((step: string) => step.trim())
+                      .map((step: string, index: number) => (
+                        <motion.div
+                          key={index}
+                          className="mb-3 p-3 bg-muted/30 rounded-lg"
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.05 }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <span className="bg-primary text-primary-foreground text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              {index + 1}
+                            </span>
+                            <p className="text-sm leading-relaxed m-0">
+                              {step.trim()}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ))}
                   </div>
                 </div>
 
@@ -213,7 +252,9 @@ export function RecipeDetailsModal({
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex">
                       <span className="font-medium">Category:</span>
-                      <p className="text-muted-foreground">{recipe.strCategory}</p>
+                      <p className="text-muted-foreground">
+                        {recipe.strCategory}
+                      </p>
                     </div>
                     <div className="flex">
                       <span className="font-medium">Cuisine:</span>
@@ -222,13 +263,17 @@ export function RecipeDetailsModal({
                     {recipe.strMealAlternate && (
                       <div className="col-span-2">
                         <span className="font-medium">Alternative Name:</span>
-                        <p className="text-muted-foreground">{recipe.strMealAlternate}</p>
+                        <p className="text-muted-foreground">
+                          {recipe.strMealAlternate}
+                        </p>
                       </div>
                     )}
                     {recipe.dateModified && (
                       <div className="col-span-2">
                         <span className="font-medium">Last Modified:</span>
-                        <p className="text-muted-foreground">{new Date(recipe.dateModified).toLocaleDateString()}</p>
+                        <p className="text-muted-foreground">
+                          {new Date(recipe.dateModified).toLocaleDateString()}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -239,22 +284,34 @@ export function RecipeDetailsModal({
             {/* Footer Actions */}
             <div className="p-6 pt-4 border-t flex-shrink-0 cursor-pointer">
               <div className="flex gap-3 cursor-pointer">
-                <Button variant={isLiked ? "default" : "outline"} onClick={handleFavoriteClick} className="flex-1 cursor-pointer">
-                  <Heart className={cn("h-4 w-4 mr-2 cursor-pointer", isLiked && "fill-current")} />
+                <Button
+                  variant={isLiked ? "default" : "outline"}
+                  onClick={handleFavoriteClick}
+                  className="flex-1 cursor-pointer"
+                >
+                  <Heart
+                    className={cn(
+                      "h-4 w-4 mr-2 cursor-pointer",
+                      isLiked && "fill-current"
+                    )}
+                  />
                   {isLiked ? "Saved to Favorites" : "Save Recipe"}
                 </Button>
                 {recipe.strYoutube && (
-                  <Button 
+                  <Button
                     variant="secondary"
-                    onClick={() => window.open(recipe.strYoutube, '_blank')
-                    }className="cursor-pointer"
-                    
+                    onClick={() => window.open(recipe.strYoutube, "_blank")}
+                    className="cursor-pointer"
                   >
                     <Play className="h-4 w-4 mr-2 " />
                     Video
                   </Button>
                 )}
-                <Button variant="outline" onClick={onClose} className="cursor-pointer">
+                <Button
+                  variant="outline"
+                  onClick={onClose}
+                  className="cursor-pointer"
+                >
                   Close
                 </Button>
               </div>
@@ -263,5 +320,5 @@ export function RecipeDetailsModal({
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

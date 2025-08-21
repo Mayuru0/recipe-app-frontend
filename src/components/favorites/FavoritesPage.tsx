@@ -1,23 +1,37 @@
-"use client"
+"use client";
 
-import { useAddFavoriteMutation, useGetFavoritesQuery, useRemoveFavoriteMutation } from '@/Redux/features/favoritesApiSlice';
-import React, { useState } from 'react'
-import { RecipeCard } from '../recipes/recipe-card';
-import { RecipeDetailsModal } from '../recipes/recipe-details-modal';
+import {
+  useAddFavoriteMutation,
+  useGetFavoritesQuery,
+  useRemoveFavoriteMutation,
+} from "@/Redux/features/favoritesApiSlice";
+import React, { useState } from "react";
+import { RecipeCard } from "../recipes/recipe-card";
+import { RecipeDetailsModal } from "../recipes/recipe-details-modal";
+import { motion } from "framer-motion";
 
 const FavoritesPage = () => {
   const [modalRecipeId, setModalRecipeId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: favorites = [], isLoading } = useGetFavoritesQuery();
-   const [addFavorite] = useAddFavoriteMutation();
-    const [removeFavorite] = useRemoveFavoriteMutation();
+  const [addFavorite] = useAddFavoriteMutation();
+  const [removeFavorite] = useRemoveFavoriteMutation();
 
-   // function to toggle favorite
-  const handleFavoriteToggle = async (idMeal: string, newState: boolean, title: string, imageUrl: string) => {
+  // function to toggle favorite
+  const handleFavoriteToggle = async (
+    idMeal: string,
+    newState: boolean,
+    title: string,
+    imageUrl: string
+  ) => {
     try {
       if (newState) {
         // add to favorites
-        await addFavorite({ idMeal, strMeal: title, strMealThumb: imageUrl }).unwrap();
+        await addFavorite({
+          idMeal,
+          strMeal: title,
+          strMealThumb: imageUrl,
+        }).unwrap();
       } else {
         // remove from favorites
         await removeFavorite(idMeal).unwrap();
@@ -42,8 +56,7 @@ const FavoritesPage = () => {
     setIsModalOpen(true);
   };
 
-
- const selectedRecipe = favorites.find(r => r.idMeal === modalRecipeId);
+  const selectedRecipe = favorites.find((r) => r.idMeal === modalRecipeId);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 p-6">
@@ -61,18 +74,31 @@ const FavoritesPage = () => {
         {/* Recipes Grid */}
         {favorites.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {favorites.map((recipe) => (
-              <RecipeCard
+            {favorites.map((recipe, index) => (
+              <motion.div
                 key={recipe.idMeal}
-                id={recipe.idMeal}
-                title={recipe.strMeal}
-                imageUrl={recipe.strMealThumb}
-                isFavorited={recipe.status === true || recipe.status === "favorite"}
-                onFavoriteToggle={(id, newState) =>
-              handleFavoriteToggle(id, newState, recipe.strMeal, recipe.strMealThumb)
-            }
-                onViewDetails={handleViewDetails}
-              />
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+              >
+                <RecipeCard
+                  id={recipe.idMeal}
+                  title={recipe.strMeal}
+                  imageUrl={recipe.strMealThumb}
+                  isFavorited={
+                    recipe.status === true || recipe.status === "favorite"
+                  }
+                  onFavoriteToggle={(id, newState) =>
+                    handleFavoriteToggle(
+                      id,
+                      newState,
+                      recipe.strMeal,
+                      recipe.strMealThumb
+                    )
+                  }
+                  onViewDetails={handleViewDetails}
+                />
+              </motion.div>
             ))}
           </div>
         ) : (
@@ -88,15 +114,23 @@ const FavoritesPage = () => {
 
         {/* Recipe Details Modal */}
         <RecipeDetailsModal
-  idMeal={modalRecipeId}
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-  isFavorited={selectedRecipe?.status === true || selectedRecipe?.status === "favorite"}
-  onFavoriteToggle={(id, newState) =>
-    selectedRecipe &&
-    handleFavoriteToggle(id, newState, selectedRecipe.strMeal, selectedRecipe.strMealThumb)
-  }
-/>
+          idMeal={modalRecipeId}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          isFavorited={
+            selectedRecipe?.status === true ||
+            selectedRecipe?.status === "favorite"
+          }
+          onFavoriteToggle={(id, newState) =>
+            selectedRecipe &&
+            handleFavoriteToggle(
+              id,
+              newState,
+              selectedRecipe.strMeal,
+              selectedRecipe.strMealThumb
+            )
+          }
+        />
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import {
   useGetFavoritesQuery,
   useRemoveFavoriteMutation,
 } from "@/Redux/features/favoritesApiSlice";
+import { motion } from "framer-motion";
 
 interface RecipePageProps {
   recipes: Recipe[];
@@ -197,7 +198,7 @@ const RecipePage: React.FC<RecipePageProps> = ({
           )}
           {searchTerm && (
             <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-            &quot;{searchTerm}&quot;
+              &quot;{searchTerm}&quot;
               <button
                 onClick={clearSearchTerm}
                 className="ml-1 hover:bg-blue-200 rounded-full p-0.5 text-xs"
@@ -213,41 +214,61 @@ const RecipePage: React.FC<RecipePageProps> = ({
       {isLoading ? (
         <div className="grid grid-cols-3 gap-6">
           {Array.from({ length: displayCount }).map((_, index) => (
-            <CategoryCardSkeleton key={index} />
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <CategoryCardSkeleton />
+            </motion.div>
           ))}
         </div>
       ) : displayedRecipes.length > 0 ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-6 mb-6">
-            {displayedRecipes.map((recipe) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+            {displayedRecipes.map((recipe, index) => {
               const isFavorited = favorites.some(
                 (fav) =>
                   fav.idMeal === recipe.idMeal && fav.status === "favorite"
               );
 
               return (
-                <RecipeCard
+                <motion.div
                   key={recipe.idMeal}
-                  id={recipe.idMeal}
-                  title={recipe.strMeal}
-                  imageUrl={recipe.strMealThumb}
-                  isFavorited={isFavorited}
-                  onFavoriteToggle={(id, newState) =>
-                    handleFavoriteToggle(
-                      id,
-                      newState,
-                      recipe.strMeal,
-                      recipe.strMealThumb
-                    )
-                  }
-                  onViewDetails={handleViewDetails}
-                />
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <RecipeCard
+                    id={recipe.idMeal}
+                    title={recipe.strMeal}
+                    imageUrl={recipe.strMealThumb}
+                    isFavorited={isFavorited}
+                    onFavoriteToggle={(id, newState) =>
+                      handleFavoriteToggle(
+                        id,
+                        newState,
+                        recipe.strMeal,
+                        recipe.strMealThumb
+                      )
+                    }
+                    onViewDetails={handleViewDetails}
+                  />
+                </motion.div>
               );
             })}
           </div>
 
           {hasMore && (
-            <div className="text-center mt-12">
+            <motion.div
+              className="text-center mt-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
               <Button
                 onClick={handleLoadMore}
                 variant="outline"
@@ -256,11 +277,17 @@ const RecipePage: React.FC<RecipePageProps> = ({
                 Load More ({filteredRecipes.length - displayedRecipes.length}{" "}
                 remaining)
               </Button>
-            </div>
+            </motion.div>
           )}
         </>
       ) : (
-        <div className="text-center py-12">
+        <motion.div
+          className="text-center py-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <div className="text-gray-400 mb-4">
             <Search className="w-16 h-16 mx-auto mb-4" />
           </div>
@@ -268,10 +295,11 @@ const RecipePage: React.FC<RecipePageProps> = ({
             No recipes found
           </h3>
           <p className="text-gray-600">
-            {"Try adjusting your search terms or filters to find what you're looking for."}
-
+            {
+              "Try adjusting your search terms or filters to find what you're looking for."
+            }
           </p>
-        </div>
+        </motion.div>
       )}
 
       {/* Recipe Details Modal */}
@@ -283,7 +311,6 @@ const RecipePage: React.FC<RecipePageProps> = ({
           (fav) => fav.idMeal === modalRecipeId && fav.status === "favorite"
         )}
         onFavoriteToggle={(id, newState) => {
-          
           const recipeItem = displayedRecipes.find((r) => r.idMeal === id);
           if (!recipeItem) return;
 

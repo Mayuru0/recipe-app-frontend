@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "framer-motion";
 
 import Image from "next/image";
 import React from "react";
@@ -10,7 +11,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 import { selectuser } from "@/Redux/features/authSlice";
 const Hero1 = () => {
-    const user = useSelector(selectuser);
+  const user = useSelector(selectuser);
   return (
     <div className="min-h-screen w-full relative overflow-hidden flex flex-col justify-center items-center ">
       {/* Background image - full screen */}
@@ -27,38 +28,64 @@ const Hero1 = () => {
       </div>
 
       {/* Hero Section */}
-      <section className="relative py-20 px-4  flex flex-col justify-center items-center">
+      <motion.section
+        className="relative py-20 px-4 flex flex-col justify-center items-center"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+      >
         <div className="container mx-auto text-center">
-          <Badge variant="secondary" className="mb-4">
-            <ChefHat className="h-3 w-3 mr-1" />
-            Discover Amazing Recipes 
-          </Badge>
-          <h1 className="font-serif text-4xl md:text-6xl font-bold text-white  mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <Badge variant="secondary" className="mb-4">
+              <ChefHat className="h-3 w-3 mr-1" />
+              Discover Amazing Recipes
+            </Badge>
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="font-serif text-4xl md:text-6xl font-bold text-white mb-6"
+          >
             Your Culinary Journey
             <br />
             <span className="text-[#007C4C]">Starts Here</span>
-          </h1>
-          <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto leading-relaxed"
+          >
             Explore thousands of delicious recipes from around the world. Save
             your favorites, discover new cuisines, and create memorable meals
             for every occasion.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          >
             <Button size="lg" asChild>
               <Link href="/categories">Browse Categories</Link>
             </Button>
-           {user ? (
+            {user ? (
               <Button variant="outline" size="lg" asChild>
                 <Link href="/recipes">View Recipes</Link>
               </Button>
             ) : (
               <Button variant="outline" size="lg" asChild>
-              <Link href="/auth/signup">Join Free Today</Link>
-            </Button>
+                <Link href="/auth/signup">Join Free Today</Link>
+              </Button>
             )}
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 };
