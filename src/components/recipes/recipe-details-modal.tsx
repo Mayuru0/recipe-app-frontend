@@ -97,15 +97,16 @@ export function RecipeDetailsModal({
                 recipe.strMealThumb || "/placeholder.svg?height=400&width=600"
               }
               alt={recipe.strMeal}
-              className="w-full h-full object-cover"
+              className="hidden sm:block w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent " />
 
             {/* Favorite Button */}
             <Button
               variant="ghost"
               size="sm"
-              className="absolute top-4 right-4 h-10 w-10 p-0 bg-white/90 hover:bg-white transition-colors cursor-pointer"
+              className="absolute top-4 right-4 h-10 w-10 p-0 bg-white/90 hover:bg-white transition-colors cursor-pointer "
               onClick={handleFavoriteClick}
             >
               <Heart
@@ -117,12 +118,12 @@ export function RecipeDetailsModal({
             </Button>
 
             {/* Category Badge */}
-            <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
+            <Badge className="absolute lg:top-4 md:top-2 lg:left-4 md:left-24 left-4 bg-primary text-primary-foreground hidden sm:block ">
               {recipe.strCategory}
             </Badge>
 
             {/* Area Badge */}
-            <Badge className="absolute top-16 left-4 bg-secondary text-secondary-foreground">
+            <Badge className="absolute lg:top-16 md:top-2 lg:left-4 md:left-2  bg-secondary text-secondary-foreground ">
               <Globe className="h-3 w-3 mr-1" />
               {recipe.strArea}
             </Badge>
@@ -133,9 +134,10 @@ export function RecipeDetailsModal({
             <DialogHeader className="p-6 pb-4 flex-shrink-0">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <DialogTitle className="font-serif text-2xl font-bold text-foreground mb-2">
+                  <DialogTitle className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2 text-left sm:text-center">
                     {recipe.strMeal}
                   </DialogTitle>
+
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
                     <ChefHat className="h-4 w-4" />
                     <span>{recipe.strArea} Cuisine</span>
@@ -282,36 +284,30 @@ export function RecipeDetailsModal({
             </ScrollArea>
 
             {/* Footer Actions */}
-            <div className="p-6 pt-4 border-t flex-shrink-0 cursor-pointer">
-              <div className="flex gap-3 cursor-pointer">
+            <div className="p-6 pt-4 border-t flex-shrink-0">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   variant={isLiked ? "default" : "outline"}
                   onClick={handleFavoriteClick}
-                  className="flex-1 cursor-pointer"
+                  className="flex-1"
                 >
                   <Heart
-                    className={cn(
-                      "h-4 w-4 mr-2 cursor-pointer",
-                      isLiked && "fill-current"
-                    )}
+                    className={cn("h-4 w-4 mr-2", isLiked && "fill-current")}
                   />
                   {isLiked ? "Saved to Favorites" : "Save Recipe"}
                 </Button>
+
                 {recipe.strYoutube && (
                   <Button
                     variant="secondary"
                     onClick={() => window.open(recipe.strYoutube, "_blank")}
-                    className="cursor-pointer"
                   >
-                    <Play className="h-4 w-4 mr-2 " />
+                    <Play className="h-4 w-4 mr-2" />
                     Video
                   </Button>
                 )}
-                <Button
-                  variant="outline"
-                  onClick={onClose}
-                  className="cursor-pointer"
-                >
+
+                <Button variant="outline" onClick={onClose}>
                   Close
                 </Button>
               </div>

@@ -181,16 +181,16 @@ const Header = () => {
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5 text-white" />
             ) : (
-              <Menu className="h-5 w-5" />
+              <Menu className="h-5 w-5 text-white" />
             )}
           </Button>
         </div>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden border-t py-4 space-y-4 bg-black  p-4">
+          <div className="md:hidden border-t py-4 space-y-4 bg-black  p-8">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -239,19 +239,19 @@ const Header = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium">{user?.name}</span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-sm font-medium text-white">{user?.name}</span>
+                      <span className="text-xs text-gray-300">
                         {user?.email}
                       </span>
                     </div>
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
+                  <Button variant="ghost" size="sm" asChild className="text-white">
                     <Link href="/profile" onClick={() => setIsMenuOpen(false)}>
-                      <Settings className="h-4 w-4 mr-2" />
+                      <Settings className="h-4 w-4 mr-2 text-white" />
                       Profile
                     </Link>
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={handleLogout}>
+                  <Button variant="ghost" size="sm" onClick={handleLogout} className="text-white">
                     <LogOut className="h-4 w-4 mr-2" />
                     Log out
                   </Button>
