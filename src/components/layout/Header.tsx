@@ -17,7 +17,7 @@ import {
 import { Search, Heart, User, Menu, X, LogOut, Settings } from "lucide-react";
 
 
-import { useFavorites } from "@/hooks/use-favorites";
+
 import { SerachBar } from "../ui/SerachBar";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectuser } from "@/Redux/features/authSlice";
@@ -25,7 +25,7 @@ import { logout, selectuser } from "@/Redux/features/authSlice";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { favoriteCount } = useFavorites();
+
  const [isScrolled, setIsScrolled] = useState(false);
   const user = useSelector(selectuser);
   const dispatch = useDispatch();
@@ -77,14 +77,14 @@ const Header = () => {
               >
                 <Heart className="h-4 w-4" />
                 Favorites
-                {favoriteCount > 0 && (
+                {/* {favoriteCount > 0 && (
                   <Badge
                     variant="secondary"
-                    className="ml-1 h-5 min-w-5 text-xs px-1.5"
+                    className="ml-1 h-5 min-w-5 text-xs px-1.5 text-red-600"
                   >
                     {favoriteCount}
                   </Badge>
-                )}
+                )} */}
               </Link>
             )}
           </nav>
@@ -217,14 +217,14 @@ const Header = () => {
                 >
                   <Heart className="h-4 w-4" />
                   Favorites
-                  {favoriteCount > 0 && (
+                  {/* {favoriteCount > 0 && (
                     <Badge
                       variant="secondary"
                       className="h-5 min-w-5 text-xs px-1.5"
                     >
                       {favoriteCount}
                     </Badge>
-                  )}
+                  )} */}
                 </Link>
               )}
             </nav>
