@@ -38,7 +38,7 @@ export function CategoryPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [displayCount, setDisplayCount] = useState<number>(6);
+  const [displayCount, setDisplayCount] = useState<number>(7);
 
   const { data: categories = [], isLoading } = useGetCategoriesQuery();
 

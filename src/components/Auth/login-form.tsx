@@ -37,6 +37,7 @@ const LoginPage = () => {
     try {
       const response: LoginResponse = await login({ email, password }).unwrap();
 
+      //store user and token redux store
       if (response?.user && response?.token) {
         dispatch(
           setCredentials({
