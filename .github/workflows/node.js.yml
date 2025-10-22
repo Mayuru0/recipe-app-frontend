@@ -34,8 +34,8 @@ jobs:
       # - name: Run tests
       #   run: npm test
 
-      # - name: Start or Restart Next.js app with PM2
-      #   run: |
-      #     pm2 stop recipe-frontend || true
-      #     pm2 start npm --name "recipe-frontend" -- run start
-      #     pm2 save
+      - name: Start or Restart Next.js app with PM2
+        run: |
+          pm2 stop recipe-frontend || true
+          pm2 start npm --name "recipe-frontend" -- run start
+          pm2 save
