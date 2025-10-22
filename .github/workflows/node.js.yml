@@ -1,34 +1,36 @@
-name: Recipe Frontend CI
+name: Next.js CI
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main", "develop"] # Adjust branches as needed
   pull_request:
-    branches: ["master"]
+    branches: ["main", "develop"] # Adjust branches as needed
+  workflow_dispatch: # Allows manual triggering of the workflow
 
 jobs:
-  build:
+  build-and-lint:
     runs-on: self-hosted
 
-    strategy:
-      matrix:
-        node-version: [24.6.0]
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: "24.6.0" # Specify your desired Node.js version
+          cache: "npm" # Caches npm dependencies to speed up subsequent runs
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci # Use npm ci for clean installs in CI environments
 
-      - name: Build Next.js app
+      - name: Run lint check
+        run: npm run lint
+
+      - name: Build application
         run: npm run build
+        env:
+          CI: true # Ensures a clean build environment
 
       # Optional: run tests if you have them
       # - name: Run tests
