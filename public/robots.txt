@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://www.recipeapp.gleeze.com
+
+# Sitemaps
+Sitemap: https://www.recipeapp.gleeze.com/sitemap.xml

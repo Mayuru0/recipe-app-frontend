@@ -140,7 +140,7 @@ export function CategoryPage() {
           <div className="flex flex-wrap gap-3">
             {categoryNames
               .filter((_, index) => index !== 4)
-              .slice(0, 6)
+             // .slice(0, 6)
               .map((categoryName) => (
                 <Button
                   key={categoryName}
