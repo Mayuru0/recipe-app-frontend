@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Explore delicious recipes, view detailed ingredients and cooking instructions, and save your favorite dishes easily with the Recipe App.",
       verification: {
-    google: "XYZ123abc456",
+    google: "rRFuBD3_SnrZBwn9Pc7ynG6AM2YF_TdD9rWdCfD64ws",
   },
   keywords: [
     "Recipe App",

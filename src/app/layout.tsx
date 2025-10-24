@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   description:
     "Explore delicious recipes, view detailed ingredients and cooking instructions, and save your favorite dishes easily with the Recipe App.",
     verification: {
-    google: "XYZ123abc456",
+    google: "rRFuBD3_SnrZBwn9Pc7ynG6AM2YF_TdD9rWdCfD64ws",
   },
   keywords: [
     "Recipe App",
@@ -82,7 +82,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="google-site-verification" content="XYZ123abc456" />
+        <meta name="google-site-verification" content="rRFuBD3_SnrZBwn9Pc7ynG6AM2YF_TdD9rWdCfD64ws" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
