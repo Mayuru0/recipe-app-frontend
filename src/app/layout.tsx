@@ -83,6 +83,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="monetag" content="de045f2b50829b22a41d7c51ad590bed"></meta>
+        <script src="https://fpyf8.com/88/tag.min.js" data-zone="181633" async data-cfasync="false"></script>
         <meta name="google-site-verification" content="rRFuBD3_SnrZBwn9Pc7ynG6AM2YF_TdD9rWdCfD64ws" />
       </head>
       <body
