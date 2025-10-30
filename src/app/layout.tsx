@@ -82,6 +82,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta name="monetag" content="de045f2b50829b22a41d7c51ad590bed"></meta>
         <meta name="google-site-verification" content="rRFuBD3_SnrZBwn9Pc7ynG6AM2YF_TdD9rWdCfD64ws" />
       </head>
       <body
