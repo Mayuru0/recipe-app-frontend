@@ -19,6 +19,7 @@ import { logout, selectuser } from "@/Redux/features/authSlice";
 import { useGetRecipesByCategoryQuery } from "@/Redux/features/recipesApiSlice";
 import { SerachBar } from "../ui/SerachBar";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -146,7 +147,7 @@ const Header = () => {
                     onClick={() => handleClick(recipe.idMeal)}
                     className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white/10 transition-colors text-left"
                   >
-                    <img
+                    <Image
                       src={recipe.strMealThumb}
                       alt={recipe.strMeal}
                       className="w-10 h-10 object-cover rounded-md"
@@ -269,7 +270,7 @@ const Header = () => {
                       onClick={() => handleClick(recipe.idMeal)}
                       className="w-full flex items-center gap-3 px-4 py-2 hover:bg-white/10 transition-colors text-left"
                     >
-                      <img
+                      <Image
                         src={recipe.strMealThumb}
                         alt={recipe.strMeal}
                         className="w-10 h-10 object-cover rounded-md"

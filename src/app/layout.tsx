@@ -93,7 +93,7 @@ export default function RootLayout({
 
 
         {/* adsterra */}
-          <script type='text/javascript' src='//pl27953190.effectivegatecpm.com/54/df/66/54df668d2834322f3fc4e4085e159d53.js'></script>
+      {/* <script type='text/javascript' src='//pl27953190.effectivegatecpm.com/54/df/66/54df668d2834322f3fc4e4085e159d53.js'></script> */}
 
 
         <meta name="google-site-verification" content="rRFuBD3_SnrZBwn9Pc7ynG6AM2YF_TdD9rWdCfD64ws" />

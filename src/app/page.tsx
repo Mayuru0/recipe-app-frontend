@@ -3,6 +3,7 @@ import CategorieSection from "@/components/Home/CategorieSection";
 import Hero1 from "@/components/Home/Hero1";
 import Stats from "@/components/Home/Stats";
 import type { Metadata } from "next";
+import Script from "next/script";
 
 
 export const metadata: Metadata = {
@@ -80,7 +81,7 @@ export default function Home() {
     `,
   }}
 />
-<script
+{/* <script
   dangerouslySetInnerHTML={{
     __html: `
       (function(s){
@@ -90,8 +91,15 @@ export default function Home() {
       })(document.createElement('script'));
     `,
   }}
-/>
+/> */}
 
+
+
+ {/* adsterra */}
+ <Script
+      src="//pl27953190.effectivegatecpm.com/54/df/66/54df668d2834322f3fc4e4085e159d53.js"
+      strategy="afterInteractive" // ensures script loads after page is interactive
+    />
       
       <section className="w-full h-screen">
         <Hero1 />
@@ -105,7 +113,7 @@ export default function Home() {
       <section className="w-full">
         <ButtomHero />
       </section>
-
+   
     </main>
   );
 }

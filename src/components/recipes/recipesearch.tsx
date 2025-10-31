@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Heart, ChefHat, ExternalLink, Play, Globe, Sparkles, Clock, Users } from "lucide-react";
+import { Heart, ChefHat, ExternalLink, Play, Globe, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetRecipeByIdQuery } from "@/Redux/features/recipesApiSlice";
 import { RecipeDetail } from "@/type/Recipes";
