@@ -57,6 +57,42 @@ export default function Home() {
   return (
    
     <main className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/2 ">
+
+<script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function(s){
+        s.dataset.zone='10122221';
+        s.src='https://al5sm.com/tag.min.js';
+        document.body.appendChild(s);
+      })(document.createElement('script'));
+    `,
+  }}
+/>
+<script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function(s){
+        s.dataset.zone='10122274';
+        s.src='https://gizokraijaw.net/vignette.min.js';
+        document.body.appendChild(s);
+      })(document.createElement('script'));
+    `,
+  }}
+/>
+<script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function(s){
+        s.dataset.zone='10122289';
+        s.src='https://forfrogadiertor.com/tag.min.js';
+        document.body.appendChild(s);
+      })(document.createElement('script'));
+    `,
+  }}
+/>
+
+      
       <section className="w-full h-screen">
         <Hero1 />
       </section>
