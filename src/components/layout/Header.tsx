@@ -17,9 +17,9 @@ import { Search, Heart, User, Menu, X, LogOut, Settings } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectuser } from "@/Redux/features/authSlice";
 import { useGetRecipesByCategoryQuery } from "@/Redux/features/recipesApiSlice";
-//import { Recipe } from "@/type/Recipes";
 import { SerachBar } from "../ui/SerachBar";
 import { useRouter } from "next/navigation";
+
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -62,13 +62,13 @@ const Header = () => {
 
   const handleClick = (idMeal: string) => {
     if (user) {
-      router.push(`/recipe/${idMeal}`); // go to recipe page
+      router.push(`/recipe/${idMeal}`);
     } else {
-      router.push("/auth/login"); // redirect to login
+      router.push("/auth/login");
     }
     setSearchQuery("");
     setSearchTriggered(false);
-    setIsMenuOpen(false); // close mobile menu if open
+    setIsMenuOpen(false);
   };
 
   useEffect(() => {
@@ -140,24 +140,6 @@ const Header = () => {
             {/* 🔽 Dropdown Suggestions */}
             {searchQuery && filteredRecipes.length > 0 && (
               <div className="absolute top-12 left-0 w-full bg-black/90 border border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
-                {/* {filteredRecipes.map((recipe) => (
-                  <Link
-                    key={recipe.idMeal}
-                    href={`/recipes/${recipe.idMeal}`}
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSearchTriggered(false);
-                    }}
-                    className="flex items-center gap-3 px-4 py-2 hover:bg-white/10 transition-colors"
-                  >
-                    <img
-                      src={recipe.strMealThumb}
-                      alt={recipe.strMeal}
-                      className="w-10 h-10 object-cover rounded-md"
-                    />
-                    <span className="text-white text-sm">{recipe.strMeal}</span>
-                  </Link>
-                ))} */}
                 {filteredRecipes.map((recipe) => (
                   <button
                     key={recipe.idMeal}
@@ -176,7 +158,7 @@ const Header = () => {
             )}
           </div>
 
-          {/* User Actions */}
+          {/* User Actions - Desktop */}
           <div className="hidden md:flex items-center space-x-2">
             {user ? (
               <DropdownMenu>
@@ -259,6 +241,7 @@ const Header = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden border-t py-4 space-y-4 bg-black p-8 relative">
+            {/* Mobile Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-white" />
               <Input
@@ -281,24 +264,6 @@ const Header = () => {
               {searchQuery && filteredRecipes.length > 0 && (
                 <div className="absolute top-12 left-0 w-full bg-black/90 border border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
                   {filteredRecipes.map((recipe) => (
-                    //   <Link
-                    //     key={recipe.idMeal}
-                    //     href={`/recipes/${recipe.idMeal}`}
-                    //     onClick={() => {
-                    //       setSearchQuery("");
-                    //       setSearchTriggered(false);
-                    //       setIsMenuOpen(false);
-                    //     }}
-                    //     className="flex items-center gap-3 px-4 py-2 hover:bg-white/10 transition-colors"
-                    //   >
-                    //     <img
-                    //       src={recipe.strMealThumb}
-                    //       alt={recipe.strMeal}
-                    //       className="w-10 h-10 object-cover rounded-md"
-                    //     />
-                    //     <span className="text-white text-sm">{recipe.strMeal}</span>
-                    //   </Link>
-                    // ))}
                     <button
                       key={recipe.idMeal}
                       onClick={() => handleClick(recipe.idMeal)}
@@ -318,6 +283,7 @@ const Header = () => {
               )}
             </div>
 
+            {/* Mobile Navigation */}
             <nav className="flex flex-col space-y-2">
               <Link
                 href="/categories"
@@ -336,6 +302,68 @@ const Header = () => {
                 </Link>
               )}
             </nav>
+
+            {/* Mobile User Section */}
+            <div className="border-t border-white/10 pt-4">
+              {user ? (
+                <div className="space-y-3">
+                  {/* User Info */}
+                  <div className="flex items-center gap-3 px-2">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={"/placeholder.svg"} alt={user?.name} />
+                      <AvatarFallback>
+                        {user?.name?.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-white">
+                        {user?.name}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {user?.email}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* User Actions */}
+                  <div className="flex flex-col space-y-1">
+                    <Link
+                      href="/profile"
+                      className="text-white hover:bg-white/10 transition-colors py-2 px-2 rounded flex items-center gap-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Settings className="h-4 w-4" /> Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="text-white hover:bg-white/10 transition-colors py-2 px-2 rounded flex items-center gap-2 w-full text-left"
+                    >
+                      <LogOut className="h-4 w-4" /> Log out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col space-y-2">
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    asChild
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Link href="/auth/login">
+                      <User className="h-4 w-4 mr-2" /> Sign In
+                    </Link>
+                  </Button>
+                  <Button
+                    className="w-full"
+                    asChild
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Link href="/auth/signup">Sign Up</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
