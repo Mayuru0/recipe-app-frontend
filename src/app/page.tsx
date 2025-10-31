@@ -59,6 +59,7 @@ export default function Home() {
    
     <main className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/2 ">
 
+{/* OnClick (Popunder) */}
 <script
   dangerouslySetInnerHTML={{
     __html: `
@@ -70,6 +71,8 @@ export default function Home() {
     `,
   }}
 />
+
+{/* Vignette Banner */}
 <script
   dangerouslySetInnerHTML={{
     __html: `
@@ -81,6 +84,9 @@ export default function Home() {
     `,
   }}
 />
+
+{/* In-Page Push */}
+
 {/* <script
   dangerouslySetInnerHTML={{
     __html: `
