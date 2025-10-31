@@ -81,7 +81,7 @@ export default function Home() {
     `,
   }}
 />
-<script
+{/* <script
   dangerouslySetInnerHTML={{
     __html: `
       (function(s){
@@ -91,7 +91,7 @@ export default function Home() {
       })(document.createElement('script'));
     `,
   }}
-/>
+/> */}
 
 
 
