@@ -78,14 +78,17 @@ const LoginPage = () => {
       } else {
         throw new Error("Invalid response format from server");
       }
-    } catch (err: any) {
-      console.error("Login error:", err);
-      const errorMessage =
-        err?.data?.message ||
-        "Login failed. Please check your credentials and try again.";
-      toast.error(errorMessage);
-      setError(errorMessage);
-    }
+    } catch (err: unknown) {
+  console.error("Login error:", err);
+
+  const errorMessage =
+    (err as { data?: { message?: string } })?.data?.message ||
+    "Login failed. Please check your credentials and try again.";
+
+  toast.error(errorMessage);
+  setError(errorMessage);
+}
+
   };
 
   // ✅ Redirect if already logged in
